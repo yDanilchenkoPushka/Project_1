@@ -1,10 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
+    public event Action OnDamaged;
+
     [SerializeField]
     private Rigidbody _rigidbody;
 
@@ -31,4 +32,7 @@ public class Player : MonoBehaviour
         transform.position = at;
         transform.rotation = Quaternion.identity;
     }
+
+    public void TakeDamage() => 
+        OnDamaged?.Invoke();
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DefaultNamespace
 {
@@ -8,9 +7,16 @@ namespace DefaultNamespace
         [SerializeField]
         private SpawnPoint _spawnPoint;
         
+        private SceneLoader _sceneLoader;
+        
         private Player _player;
 
         private bool HasPlayer => _player != null;
+
+        private void Awake()
+        {
+            _sceneLoader = new SceneLoader();
+        }
 
         private void Update()
         {
@@ -23,16 +29,28 @@ namespace DefaultNamespace
         private void CheckSpawn()
         {
             if (Input.GetKeyDown(KeyCode.Space))
-                SpawnPlayer();
+                CreatePlayer();
 
         }
 
-        private void SpawnPlayer()
+        private void CreatePlayer()
         {
             Player playerPrefab = Resources.Load<Player>("Player");
             
             _player = Instantiate(playerPrefab);
             _player.Spawn(_spawnPoint.Position);
+
+            _player.OnDamaged += KillPlayer;
         }
+
+        private void KillPlayer()
+        {
+            _player.OnDamaged -= KillPlayer;
+            
+            LoadMainMenu();
+        }
+
+        private void LoadMainMenu() => 
+            _sceneLoader.Load(SceneInfos.MAIN_MENU);
     }
 }
