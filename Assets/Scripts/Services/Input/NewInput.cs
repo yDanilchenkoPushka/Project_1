@@ -4,15 +4,18 @@ using UnityEngine.InputSystem;
 
 namespace DefaultNamespace.Services.Input
 {
-    public class InputService : IPlayerControl
+    public class InputService : ISimpleInput
     {
-        public event Action OnPlayed;
+        public event Action OnTaped;
+
+        public Vector2 Axis => new Vector2(
+            _controls.Player.Movement_hor.ReadValue<float>(),
+            _controls.Player.Movement_ver.ReadValue<float>());
+
         private readonly Controls _controls;
 
-        public InputService()
-        {
+        public InputService() => 
             _controls = new Controls();
-        }
 
         public void Initialize()
         {
@@ -21,9 +24,6 @@ namespace DefaultNamespace.Services.Input
             _controls.LevelMenu.Play.performed += Play;
         }
 
-        private void Play(InputAction.CallbackContext obj) => 
-            OnPlayed?.Invoke();
-
         public void DeInitialize()
         {
             _controls.Disable();
@@ -31,9 +31,7 @@ namespace DefaultNamespace.Services.Input
             _controls.LevelMenu.Play.performed -= Play;
         }
 
-        public Vector2 MovementAxis => new Vector2(
-            _controls.Player.Movement_hor.ReadValue<float>(),
-            _controls.Player.Movement_ver.ReadValue<float>());
-
+        private void Play(InputAction.CallbackContext obj) => 
+            OnTaped?.Invoke();
     }
 }

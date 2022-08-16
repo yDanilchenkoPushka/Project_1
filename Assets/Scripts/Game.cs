@@ -1,5 +1,8 @@
-﻿using DefaultNamespace.Services.Input;
+﻿using CodeBase.Services;
+using DefaultNamespace.Services.Input;
 using UnityEngine;
+using Rewired;
+using Services.Input.Factory;
 
 namespace DefaultNamespace
 {
@@ -9,25 +12,25 @@ namespace DefaultNamespace
         private SpawnPoint _spawnPoint;
         
         private SceneLoader _sceneLoader;
-
-        private InputService _inputService;
+        
         private Player _player;
+
+        private ISimpleInput _simpleInput;
 
         private bool HasPlayer => _player != null;
 
         private void Awake()
         {
+            _simpleInput = AllServices.Container.Single<ISimpleInput>();
+
             _sceneLoader = new SceneLoader();
-            _inputService = new InputService();
-            
-            _inputService.Initialize();
 
-            _inputService.OnPlayed += CreatePlayer;
+            _simpleInput.OnTaped += CreatePlayer;
         }
-
+        
         private void OnDestroy()
         {
-            _inputService.DeInitialize();
+            _simpleInput.OnTaped -= CreatePlayer;
         }
 
         private void CreatePlayer()
@@ -38,12 +41,12 @@ namespace DefaultNamespace
             Player playerPrefab = Resources.Load<Player>("Player");
             
             _player = Instantiate(playerPrefab);
-            _player.Construct(_inputService);
+            _player.Construct(_simpleInput);
             _player.Spawn(_spawnPoint.Position);
-
+            
             _player.OnDamaged += KillPlayer;
-
-            _inputService.OnPlayed -= CreatePlayer;
+            
+            _simpleInput.OnTaped -= CreatePlayer;
         }
 
         private void KillPlayer()
