@@ -12,21 +12,26 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField]
     private float _speed;
 
-    private void FixedUpdate()
-    {
-        float horizontalAxis = Input.GetAxis("Horizontal");
-        float verticalAxis = Input.GetAxis("Vertical");
-        
-        Move(horizontalAxis, verticalAxis);
-    }
+    private IPlayerControl _playerControl;
 
-    private void Move(float x, float y)
+    public void Construct(IPlayerControl playerControl) => 
+        _playerControl = playerControl;
+
+    private void OnDestroy() => 
+        DeInitialize();
+
+    private void DeInitialize() => 
+        _playerControl = null;
+
+    private void FixedUpdate() => 
+        Move(_playerControl.MovementAxis);
+
+    private void Move(Vector2 direction)
     {
-        Vector3 movement = new Vector3(x * _speed, 0, y * _speed);
+        Vector3 movement = new Vector3(direction.x * _speed, 0, direction.y * _speed);
         _rigidbody.AddForce(movement, ForceMode.Acceleration);
     }
 
-        
     public void Spawn(Vector3 at)
     {
         transform.position = at;

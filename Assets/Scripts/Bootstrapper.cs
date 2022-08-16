@@ -1,44 +1,63 @@
-﻿using System;
+﻿using DefaultNamespace.UI;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace DefaultNamespace
 {
     public class Bootstrapper : MonoBehaviour
     {
         [SerializeField]
-        private ExitHandler _exitHandler;
+        private ButtonBar _buttonBar;
         
-        [SerializeField]
-        private Button _startGameButton;
-        
+        private Controls _controls;
         private SceneLoader _sceneLoader;
+        private ExitHandler _exitHandler;
 
         private void Awake()
         {
+            _controls = new Controls();
             _sceneLoader = new SceneLoader();
+            _exitHandler = new ExitHandler();
             
-            _startGameButton.onClick.AddListener(LoadLevel);
+            _buttonBar.Construct(_controls);
             
-            _exitHandler.Initialize();
-            _exitHandler.OnExited += Exit;
+            Initialize();
         }
 
-        private void OnDestroy()
+        private void Initialize()
         {
-            _startGameButton.onClick.RemoveListener(LoadLevel);
+            _controls.MainMenu.Enable();
             
-            _exitHandler.DeInitialize();
-            _exitHandler.OnExited -= Exit;
+            InteractiveButton interactiveButton;
+            
+            if (_buttonBar.TryGetButton<StartGameButton>(out interactiveButton))
+                interactiveButton.OnClicked += LoadLevel;
+            
+            if (_buttonBar.TryGetButton<ExitButton>(out interactiveButton))
+                interactiveButton.OnClicked += Exit;
         }
-        
+
+        private void DeInitialize()
+        {
+            _controls.MainMenu.Disable();
+            
+            _buttonBar.DeInitialize();
+            
+            InteractiveButton interactiveButton;
+            
+            if (_buttonBar.TryGetButton<StartGameButton>(out interactiveButton))
+                interactiveButton.OnClicked -= LoadLevel;
+            
+            if (_buttonBar.TryGetButton<ExitButton>(out interactiveButton))
+                interactiveButton.OnClicked -= Exit;
+        }
+
+        private void OnDestroy() => 
+            DeInitialize();
+
         private void LoadLevel() => 
             _sceneLoader.Load(SceneInfos.LEVEL);
 
-        private void Exit()
-        {
-            _exitHandler.DeInitialize();
+        private void Exit() => 
             _exitHandler.Exit();
-        }
     }
 }
