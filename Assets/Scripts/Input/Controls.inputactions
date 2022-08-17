@@ -2,7 +2,7 @@
     "name": "Controls",
     "maps": [
         {
-            "name": "Player",
+            "name": "Gameplay",
             "id": "47f1f1f8-be89-4d6b-8119-d1b9933e0117",
             "actions": [
                 {
@@ -164,7 +164,7 @@
             "id": "71eb166e-6c98-482d-ae99-37283ce6dbd3",
             "actions": [
                 {
-                    "name": "Play",
+                    "name": "Start",
                     "type": "Button",
                     "id": "e5e214e5-7cdc-417a-9231-71d761f5a0e4",
                     "expectedControlType": "Button",
@@ -181,7 +181,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Play",
+                    "action": "Start",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -192,7 +192,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Play",
+                    "action": "Start",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -203,7 +203,7 @@
             "id": "0a22b030-e84f-409d-974d-8e434c92fd50",
             "actions": [
                 {
-                    "name": "Down",
+                    "name": "Move_down",
                     "type": "Button",
                     "id": "0172ce78-efa6-47ac-b1ca-b89675b19dec",
                     "expectedControlType": "Button",
@@ -212,7 +212,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Up",
+                    "name": "Move_up",
                     "type": "Button",
                     "id": "a85162a5-d5ab-4dc9-ab77-9a4a9324ee4a",
                     "expectedControlType": "Button",
@@ -238,7 +238,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Down",
+                    "action": "Move_down",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -249,7 +249,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Down",
+                    "action": "Move_down",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -260,7 +260,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Up",
+                    "action": "Move_up",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -271,7 +271,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Up",
+                    "action": "Move_up",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

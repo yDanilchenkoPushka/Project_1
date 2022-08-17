@@ -1,4 +1,4 @@
-﻿namespace Services.Input.Factory
+﻿namespace Other
 {
     public interface IDeInitializable
     {

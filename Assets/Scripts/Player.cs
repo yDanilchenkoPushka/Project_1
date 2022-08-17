@@ -1,10 +1,13 @@
 using System;
-using DefaultNamespace;
+using Damage;
+using Score;
+using Services.Input;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IDamageable
+public class Player : MonoBehaviour, IDamageable, IScoreWriter, IScoreReader
 {
     public event Action OnDamaged;
+    public event Action<int> OnScoreUpdated; 
 
     [SerializeField]
     private Rigidbody _rigidbody;
@@ -13,6 +16,7 @@ public class Player : MonoBehaviour, IDamageable
     private float _speed;
 
     private ISimpleInput _simpleInput;
+    private int _currentScore;
 
     public void Construct(ISimpleInput simpleInput) => 
         _simpleInput = simpleInput;
@@ -40,4 +44,11 @@ public class Player : MonoBehaviour, IDamageable
 
     public void TakeDamage() => 
         OnDamaged?.Invoke();
+
+    public void Accrue(int score)
+    {
+        _currentScore += score;
+        
+        OnScoreUpdated?.Invoke(_currentScore);
+    }
 }

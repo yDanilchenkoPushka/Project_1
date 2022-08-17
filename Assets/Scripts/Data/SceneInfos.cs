@@ -1,4 +1,4 @@
-﻿namespace DefaultNamespace
+﻿namespace Data
 {
     public static class SceneInfos
     {

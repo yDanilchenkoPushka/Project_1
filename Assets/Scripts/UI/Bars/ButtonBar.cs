@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Services.Input;
+using UI.Buttons;
 using UnityEngine;
 
-namespace DefaultNamespace.UI
+namespace UI.Bars
 {
     public class ButtonBar : MonoBehaviour
     {

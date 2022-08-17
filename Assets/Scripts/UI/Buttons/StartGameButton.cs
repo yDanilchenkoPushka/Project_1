@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace DefaultNamespace.UI
+﻿namespace UI.Buttons
 {
     public class StartGameButton : InteractiveButton
     {

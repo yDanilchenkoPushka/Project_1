@@ -1,14 +1,13 @@
-﻿namespace DefaultNamespace
+﻿using UnityEngine;
+
+public class ExitHandler
 {
-    public class ExitHandler
+    public void Exit()
     {
-        public void Exit()
-        {
 #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
+        UnityEditor.EditorApplication.isPlaying = false;
 #else
             Application.Quit();
 #endif
-        }
     }
 }

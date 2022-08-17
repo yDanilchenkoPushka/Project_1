@@ -1,16 +1,16 @@
 ﻿using System;
-using CodeBase.Services;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace Services.Input
 {
     public interface ISimpleInput : IService
     {
+        event Action<string> OnControlUpdated;
         event Action OnTaped;
-        
+
         event Action OnUpClicked;
         event Action OnDownClicked;
-        
+
         Vector2 Axis { get; }
     }
 }

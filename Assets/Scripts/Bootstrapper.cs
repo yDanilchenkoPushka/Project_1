@@ -1,71 +1,90 @@
-﻿using CodeBase.Services;
-using DefaultNamespace.UI;
-using Rewired;
+﻿using Data;
+using Services;
+using Services.Input;
+using Services.Scene;
+using TMPro;
+using UI.Bars;
+using UI.Buttons;
 using UnityEngine;
 
-namespace DefaultNamespace
+public class Bootstrapper : MonoBehaviour
 {
-    public class Bootstrapper : MonoBehaviour
-    {
-        [SerializeField]
-        private ButtonBar _buttonBar;
+    [SerializeField]
+    private TextMeshProUGUI _log;
         
-        private SceneLoader _sceneLoader;
-        private ExitHandler _exitHandler;
+    [SerializeField]
+    private ButtonBar _buttonBar;
 
-        private AllServices _services = new AllServices();
+    [SerializeField]
+    private DeviceBar _deviceBar;
+        
+    private ExitHandler _exitHandler;
 
-        private void Awake()
-        {
-            RegisterServices();
+    private AllServices _services = new AllServices();
+
+    private void Awake()
+    {
+        RegisterServices();
             
-            _sceneLoader = new SceneLoader();
-            _exitHandler = new ExitHandler();
+        _exitHandler = new ExitHandler();
             
-            _buttonBar.Construct(_services.Single<ISimpleInput>());
+        _buttonBar.Construct(_services.Single<ISimpleInput>());
+        _deviceBar.Construct(_services.Single<ISimpleInput>());
             
-            Initialize();
-        }
+        Initialize();
+    }
 
-        private void Initialize()
-        {
-            InteractiveButton interactiveButton;
+    private void Initialize()
+    {
+        InteractiveButton interactiveButton;
             
-            if (_buttonBar.TryGetButton<StartGameButton>(out interactiveButton))
-                interactiveButton.OnClicked += LoadLevel;
+        if (_buttonBar.TryGetButton<StartGameButton>(out interactiveButton))
+            interactiveButton.OnClicked += LoadLevel;
             
-            if (_buttonBar.TryGetButton<ExitButton>(out interactiveButton))
-                interactiveButton.OnClicked += Exit;
-        }
+        if (_buttonBar.TryGetButton<ExitButton>(out interactiveButton))
+            interactiveButton.OnClicked += Exit;
+    }
 
-        private void DeInitialize()
-        {
-            _buttonBar.DeInitialize();
+    private void DeInitialize()
+    {
+        _buttonBar.DeInitialize();
+        _deviceBar.DeInitialize();
             
-            InteractiveButton interactiveButton;
+        InteractiveButton interactiveButton;
             
-            if (_buttonBar.TryGetButton<StartGameButton>(out interactiveButton))
-                interactiveButton.OnClicked -= LoadLevel;
+        if (_buttonBar.TryGetButton<StartGameButton>(out interactiveButton))
+            interactiveButton.OnClicked -= LoadLevel;
             
-            if (_buttonBar.TryGetButton<ExitButton>(out interactiveButton))
-                interactiveButton.OnClicked -= Exit;
-        }
+        if (_buttonBar.TryGetButton<ExitButton>(out interactiveButton))
+            interactiveButton.OnClicked -= Exit;
+    }
 
-        private void OnDestroy() => 
-            DeInitialize();
+    private void OnDestroy() => 
+        DeInitialize();
 
-        private void LoadLevel() => 
-            _sceneLoader.Load(SceneInfos.LEVEL);
+    private void LoadLevel()
+    {
+        ISceneLoader sceneLoader = _services.Single<ISceneLoader>();
+        sceneLoader.Load(SceneInfos.LEVEL);
+    }
 
-        private void Exit() => 
-            _exitHandler.Exit();
+    private void Exit() => 
+        _exitHandler.Exit();
 
-        private void RegisterServices()
-        {
-            _services.RegisterSingle<ISimpleInput>(InputService());
-        }
+    private void RegisterServices()
+    {
+        _services.RegisterSingle<ISimpleInput>(InputService());
+        _services.RegisterSingle<ISceneLoader>(new SceneLoader());
+    }
 
-        private ISimpleInput InputService() => 
-            new RewiredInput(ReInput.players.GetPlayer(0));
+    private ISimpleInput InputService()
+    {
+#if REWIRED_INPUT
+        _log.text = "RewiredInput";
+        return new RewiredInput();
+#else
+            _log.text = "UnityInput";
+            return new UnityInput();
+#endif
     }
 }

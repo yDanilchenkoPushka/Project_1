@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace DefaultNamespace.UI
+namespace UI.Buttons
 {
     public abstract class InteractiveButton : MonoBehaviour, IPointerEnterHandler
     {
