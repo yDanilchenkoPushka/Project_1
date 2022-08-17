@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace DefaultNamespace.Services.Input
 {
-    public class InputService : ISimpleInput
+    public class NewInput// : ISimpleInput
     {
         public event Action OnTaped;
 
@@ -14,11 +14,10 @@ namespace DefaultNamespace.Services.Input
 
         private readonly Controls _controls;
 
-        public InputService() => 
-            _controls = new Controls();
-
-        public void Initialize()
+        public NewInput()
         {
+            _controls = new Controls();
+            
             _controls.Enable();
 
             _controls.LevelMenu.Play.performed += Play;

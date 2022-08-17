@@ -1,4 +1,6 @@
-﻿using DefaultNamespace.UI;
+﻿using CodeBase.Services;
+using DefaultNamespace.UI;
+using Rewired;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -8,25 +10,25 @@ namespace DefaultNamespace
         [SerializeField]
         private ButtonBar _buttonBar;
         
-        private Controls _controls;
         private SceneLoader _sceneLoader;
         private ExitHandler _exitHandler;
 
+        private AllServices _services = new AllServices();
+
         private void Awake()
         {
-            _controls = new Controls();
+            RegisterServices();
+            
             _sceneLoader = new SceneLoader();
             _exitHandler = new ExitHandler();
             
-            _buttonBar.Construct(_controls);
+            _buttonBar.Construct(_services.Single<ISimpleInput>());
             
             Initialize();
         }
 
         private void Initialize()
         {
-            _controls.MainMenu.Enable();
-            
             InteractiveButton interactiveButton;
             
             if (_buttonBar.TryGetButton<StartGameButton>(out interactiveButton))
@@ -38,8 +40,6 @@ namespace DefaultNamespace
 
         private void DeInitialize()
         {
-            _controls.MainMenu.Disable();
-            
             _buttonBar.DeInitialize();
             
             InteractiveButton interactiveButton;
@@ -59,5 +59,13 @@ namespace DefaultNamespace
 
         private void Exit() => 
             _exitHandler.Exit();
+
+        private void RegisterServices()
+        {
+            _services.RegisterSingle<ISimpleInput>(InputService());
+        }
+
+        private ISimpleInput InputService() => 
+            new RewiredInput(ReInput.players.GetPlayer(0));
     }
 }

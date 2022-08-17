@@ -12,19 +12,19 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField]
     private float _speed;
 
-    private IPlayerControl _playerControl;
+    private ISimpleInput _simpleInput;
 
-    public void Construct(IPlayerControl playerControl) => 
-        _playerControl = playerControl;
+    public void Construct(ISimpleInput simpleInput) => 
+        _simpleInput = simpleInput;
 
     private void OnDestroy() => 
         DeInitialize();
 
     private void DeInitialize() => 
-        _playerControl = null;
+        _simpleInput = null;
 
     private void FixedUpdate() => 
-        Move(_playerControl.MovementAxis);
+        Move(_simpleInput.Axis);
 
     private void Move(Vector2 direction)
     {

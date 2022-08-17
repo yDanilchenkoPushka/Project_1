@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace DefaultNamespace.UI
 {
@@ -18,18 +17,18 @@ namespace DefaultNamespace.UI
         private Dictionary<Type, InteractiveButton> _buttonDictionary = new Dictionary<Type, InteractiveButton>();
         private int _selectedIndex = 0;
 
-        private Controls _controls;
+        private ISimpleInput _simpleInput;
 
-        public void Construct(Controls controls)
+        public void Construct(ISimpleInput simpleInput)
         {
-            _controls = controls;
+            _simpleInput = simpleInput;
             
             InitializeButtons();
             
-            _controls.MainMenu.Up.performed += ToUp;
-            _controls.MainMenu.Down.performed += ToDown;
+            _simpleInput.OnUpClicked += ToUp;
+            _simpleInput.OnDownClicked += ToDown;
 
-            _controls.MainMenu.Click.performed += Click;
+            _simpleInput.OnTaped += Click;
             
             _selectedIndex = DefaultButtonIndex;
             Select();
@@ -49,10 +48,10 @@ namespace DefaultNamespace.UI
 
         public void DeInitialize()
         {
-            _controls.MainMenu.Up.performed -= ToUp;
-            _controls.MainMenu.Down.performed -= ToDown;
+            _simpleInput.OnUpClicked -= ToUp;
+            _simpleInput.OnDownClicked -= ToDown;
 
-            _controls.MainMenu.Click.performed -= Click;
+            _simpleInput.OnTaped -= Click;
 
             for (int i = 0; i < _buttons.Length; i++)
             {
@@ -74,7 +73,7 @@ namespace DefaultNamespace.UI
             return false;
         }
 
-        private void ToUp(InputAction.CallbackContext obj)
+        private void ToUp()
         {
             CleanSelected();
 
@@ -86,7 +85,7 @@ namespace DefaultNamespace.UI
             Select();
         }
 
-        private void ToDown(InputAction.CallbackContext obj)
+        private void ToDown()
         {
             CleanSelected();
             
@@ -104,7 +103,7 @@ namespace DefaultNamespace.UI
         private void CleanSelected() => 
             _buttons[_selectedIndex].UnSelect();
 
-        private void Click(InputAction.CallbackContext obj) => 
+        private void Click() => 
             _buttons[_selectedIndex].Click();
 
         private void Choose(int id)
