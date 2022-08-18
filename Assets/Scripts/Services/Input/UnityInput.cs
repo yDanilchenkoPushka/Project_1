@@ -2,6 +2,8 @@
 using Other;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.LowLevel;
 
 namespace Services.Input
 {
@@ -25,60 +27,76 @@ namespace Services.Input
             _controls = new Controls();
             
             _controls.Enable();
-
-            _controls.Gameplay.Movement_hor.performed += OnStickButtonDown;
-            _controls.Gameplay.Movement_ver.performed += OnStickButtonDown;
-
+            
             _controls.MainMenu.Click.performed += OnClickButtonDown;
             _controls.MainMenu.Move_down.performed += OnDownButtonDown;
             _controls.MainMenu.Move_up.performed += OnUpButtonDown;
+            _controls.MainMenu.Mouse_hor.performed += OnMouseMoved;
+            _controls.MainMenu.Mouse_ver.performed += OnMouseMoved;
             
             _controls.LevelMenu.Start.performed += OnStartButtonDown;
+
+            InputSystem.onEvent += HandleInput;
+        }
+
+        private void HandleInput(InputEventPtr ptr, InputDevice device)
+        {
+            if (!ptr.IsA<StateEvent>() && !ptr.IsA<DeltaStateEvent>())
+                return;
+            
+            var controls = device.allControls;
+            var buttonPressPoint = InputSystem.settings.defaultButtonPressPoint;
+
+            for (var i = 0; i < controls.Count; ++i)
+            {
+                var control = controls[i] as ButtonControl;
+                
+                if (control == null || control.noisy)
+                    continue;
+                
+                if (control.ReadValueFromEvent(ptr, out var value) && value >= buttonPressPoint)
+                {
+                    OnControlUpdated?.Invoke(control.device.name);
+                    
+                    break;
+                }
+            }
         }
 
         public void DeInitialize()
         {
             _controls.Disable();
             
-            _controls.Gameplay.Movement_hor.performed -= OnStickButtonDown;
-            _controls.Gameplay.Movement_ver.performed -= OnStickButtonDown;
-            
             _controls.MainMenu.Click.performed -= OnClickButtonDown;
             _controls.MainMenu.Move_down.performed -= OnDownButtonDown;
             _controls.MainMenu.Move_up.performed -= OnUpButtonDown;
+            _controls.MainMenu.Mouse_hor.performed -= OnMouseMoved;
+            _controls.MainMenu.Mouse_ver.performed -= OnMouseMoved;
             
             _controls.LevelMenu.Start.performed -= OnStartButtonDown;
         }
 
-        private void OnClickButtonDown(InputAction.CallbackContext data)
+        private void OnMouseMoved(InputAction.CallbackContext context)
         {
-            OnTaped?.Invoke();
+            float value = context.ReadValue<float>();
+            value = Mathf.Abs(value);
             
-            OnControlUpdated?.Invoke(data.control.ToString());
+            float mouseOffsetPoint = 500f;
+
+            if (value >= mouseOffsetPoint) 
+                OnControlUpdated?.Invoke(context.control.device.name);
         }
 
-        private void OnStartButtonDown(InputAction.CallbackContext data)
-        {
+        private void OnClickButtonDown(InputAction.CallbackContext context) => 
             OnTaped?.Invoke();
-            
-            OnControlUpdated?.Invoke(data.control.ToString());
-        }
 
-        private void OnUpButtonDown(InputAction.CallbackContext data)
-        {
+        private void OnStartButtonDown(InputAction.CallbackContext context) => 
+            OnTaped?.Invoke();
+
+        private void OnUpButtonDown(InputAction.CallbackContext context) => 
             OnUpClicked?.Invoke();
-            
-            OnControlUpdated?.Invoke(data.control.ToString());
-        }
 
-        private void OnDownButtonDown(InputAction.CallbackContext data)
-        {
+        private void OnDownButtonDown(InputAction.CallbackContext data) => 
             OnDownClicked?.Invoke();
-            
-            OnControlUpdated?.Invoke(data.control.ToString());
-        }
-        
-        private void OnStickButtonDown(InputAction.CallbackContext data) => 
-            OnControlUpdated?.Invoke(data.control.ToString());
     }
 }

@@ -1,4 +1,5 @@
-﻿using Data;
+﻿using System;
+using Data;
 using Services;
 using Services.Input;
 using Services.Scene;
@@ -32,6 +33,10 @@ public class Bootstrapper : MonoBehaviour
         _deviceBar.Construct(_services.Single<ISimpleInput>());
             
         Initialize();
+    }
+
+    private void Update()
+    {
     }
 
     private void Initialize()

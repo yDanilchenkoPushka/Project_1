@@ -228,6 +228,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Mouse_hor",
+                    "type": "Value",
+                    "id": "a500c536-e144-4b93-8db7-da287327c146",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Mouse_ver",
+                    "type": "Value",
+                    "id": "5c3ef3ee-910c-40c4-beaf-20a4aa6dacd3",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -277,6 +295,17 @@
                 },
                 {
                     "name": "",
+                    "id": "1cb55bde-5dcc-4ec3-ba61-e385707a7532",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move_up",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "0f981d75-b05f-4b19-ad41-66d16ce313cf",
                     "path": "<Keyboard>/space",
                     "interactions": "",
@@ -294,6 +323,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6741fa2b-2389-40df-adf0-ead275f122fd",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "22dc55bf-354f-4fab-845e-c8928aa7b79d",
+                    "path": "<Mouse>/position/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse_hor",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9f8ac134-dda0-4aac-ba1e-3c332c25129f",
+                    "path": "<Mouse>/position/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse_ver",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

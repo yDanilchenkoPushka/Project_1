@@ -250,6 +250,24 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Mouse_hor"",
+                    ""type"": ""Value"",
+                    ""id"": ""a500c536-e144-4b93-8db7-da287327c146"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Mouse_ver"",
+                    ""type"": ""Value"",
+                    ""id"": ""5c3ef3ee-910c-40c4-beaf-20a4aa6dacd3"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -299,6 +317,17 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""1cb55bde-5dcc-4ec3-ba61-e385707a7532"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move_up"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""0f981d75-b05f-4b19-ad41-66d16ce313cf"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
@@ -316,6 +345,39 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6741fa2b-2389-40df-adf0-ead275f122fd"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""22dc55bf-354f-4fab-845e-c8928aa7b79d"",
+                    ""path"": ""<Mouse>/position/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse_hor"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9f8ac134-dda0-4aac-ba1e-3c332c25129f"",
+                    ""path"": ""<Mouse>/position/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse_ver"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -336,6 +398,8 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_MainMenu_Move_down = m_MainMenu.FindAction("Move_down", throwIfNotFound: true);
         m_MainMenu_Move_up = m_MainMenu.FindAction("Move_up", throwIfNotFound: true);
         m_MainMenu_Click = m_MainMenu.FindAction("Click", throwIfNotFound: true);
+        m_MainMenu_Mouse_hor = m_MainMenu.FindAction("Mouse_hor", throwIfNotFound: true);
+        m_MainMenu_Mouse_ver = m_MainMenu.FindAction("Mouse_ver", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -472,6 +536,8 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputAction m_MainMenu_Move_down;
     private readonly InputAction m_MainMenu_Move_up;
     private readonly InputAction m_MainMenu_Click;
+    private readonly InputAction m_MainMenu_Mouse_hor;
+    private readonly InputAction m_MainMenu_Mouse_ver;
     public struct MainMenuActions
     {
         private @Controls m_Wrapper;
@@ -479,6 +545,8 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         public InputAction @Move_down => m_Wrapper.m_MainMenu_Move_down;
         public InputAction @Move_up => m_Wrapper.m_MainMenu_Move_up;
         public InputAction @Click => m_Wrapper.m_MainMenu_Click;
+        public InputAction @Mouse_hor => m_Wrapper.m_MainMenu_Mouse_hor;
+        public InputAction @Mouse_ver => m_Wrapper.m_MainMenu_Mouse_ver;
         public InputActionMap Get() { return m_Wrapper.m_MainMenu; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -497,6 +565,12 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Click.started -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnClick;
                 @Click.performed -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnClick;
                 @Click.canceled -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnClick;
+                @Mouse_hor.started -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnMouse_hor;
+                @Mouse_hor.performed -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnMouse_hor;
+                @Mouse_hor.canceled -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnMouse_hor;
+                @Mouse_ver.started -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnMouse_ver;
+                @Mouse_ver.performed -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnMouse_ver;
+                @Mouse_ver.canceled -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnMouse_ver;
             }
             m_Wrapper.m_MainMenuActionsCallbackInterface = instance;
             if (instance != null)
@@ -510,6 +584,12 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Click.started += instance.OnClick;
                 @Click.performed += instance.OnClick;
                 @Click.canceled += instance.OnClick;
+                @Mouse_hor.started += instance.OnMouse_hor;
+                @Mouse_hor.performed += instance.OnMouse_hor;
+                @Mouse_hor.canceled += instance.OnMouse_hor;
+                @Mouse_ver.started += instance.OnMouse_ver;
+                @Mouse_ver.performed += instance.OnMouse_ver;
+                @Mouse_ver.canceled += instance.OnMouse_ver;
             }
         }
     }
@@ -528,5 +608,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnMove_down(InputAction.CallbackContext context);
         void OnMove_up(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
+        void OnMouse_hor(InputAction.CallbackContext context);
+        void OnMouse_ver(InputAction.CallbackContext context);
     }
 }
