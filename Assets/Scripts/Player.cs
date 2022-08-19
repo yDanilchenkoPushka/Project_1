@@ -1,14 +1,17 @@
 using System;
 using Damage;
+using DefaultNamespace;
 using Score;
 using Services.Input;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IDamageable, IScoreWriter, IScoreReader
+public class Player : MonoBehaviour, IDamageable, IScoreWriter, IScoreReader, IInteractiveHandler
 {
     public event Action OnDamaged;
-    public event Action<int> OnScoreUpdated; 
-
+    public event Action<int> OnScoreUpdated;
+    public event Action OnInteractiveEntered;
+    public event Action OnInteractiveExited;
+    
     [SerializeField]
     private Rigidbody _rigidbody;
 
@@ -17,6 +20,7 @@ public class Player : MonoBehaviour, IDamageable, IScoreWriter, IScoreReader
 
     private ISimpleInput _simpleInput;
     private int _currentScore;
+    private IInteractable _interactable;
 
     public void Construct(ISimpleInput simpleInput) => 
         _simpleInput = simpleInput;
@@ -51,4 +55,25 @@ public class Player : MonoBehaviour, IDamageable, IScoreWriter, IScoreReader
         
         OnScoreUpdated?.Invoke(_currentScore);
     }
+
+    public void EnterInteractive(IInteractable interactable)
+    {
+        _interactable = interactable;
+
+        _simpleInput.OnInteracted += Interact;
+        
+        OnInteractiveEntered?.Invoke();
+    }
+
+    public void ExitInteractive()
+    {
+        _simpleInput.OnInteracted -= Interact;
+        
+        _interactable = null;
+        
+        OnInteractiveExited?.Invoke();
+    }
+
+    public void Interact() => 
+        _interactable?.Interact();
 }

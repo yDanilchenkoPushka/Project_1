@@ -1,16 +1,19 @@
 ﻿using System;
+using DefaultNamespace.Extensions;
 using Other;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.LowLevel;
+using DeviceType = Data.DeviceType;
 
 namespace Services.Input
 {
     public class UnityInput : ISimpleInput, IDeInitializable
     {
-        public event Action<string> OnControlUpdated; 
+        public event Action<DeviceType> OnDeviceUpdated;
         public event Action OnTaped;
+        public event Action OnInteracted;
         public event Action OnUpClicked;
         public event Action OnDownClicked;
 
@@ -18,7 +21,20 @@ namespace Services.Input
             _controls.Gameplay.Movement_hor.ReadValue<float>(),
             _controls.Gameplay.Movement_ver.ReadValue<float>());
 
+        public DeviceType LastDevice
+        {
+            get => _lastDevice;
+            
+            private set
+            {
+                _lastDevice = value;
+                
+                OnDeviceUpdated?.Invoke(value);
+            }
+        }
+
         private readonly Controls _controls;
+        private DeviceType _lastDevice;
 
         public UnityInput()
         {
@@ -35,6 +51,8 @@ namespace Services.Input
             _controls.MainMenu.Mouse_ver.performed += OnMouseMoved;
             
             _controls.LevelMenu.Start.performed += OnStartButtonDown;
+
+            _controls.Gameplay.Interact.performed += Interact;
 
             InputSystem.onEvent += HandleInput;
         }
@@ -56,8 +74,8 @@ namespace Services.Input
                 
                 if (control.ReadValueFromEvent(ptr, out var value) && value >= buttonPressPoint)
                 {
-                    OnControlUpdated?.Invoke(control.device.name);
-                    
+                    LastDevice = GetDevice(control.device.name);
+
                     break;
                 }
             }
@@ -84,7 +102,7 @@ namespace Services.Input
             float mouseOffsetPoint = 500f;
 
             if (value >= mouseOffsetPoint) 
-                OnControlUpdated?.Invoke(context.control.device.name);
+                LastDevice = DeviceType.Mouse;
         }
 
         private void OnClickButtonDown(InputAction.CallbackContext context) => 
@@ -98,5 +116,24 @@ namespace Services.Input
 
         private void OnDownButtonDown(InputAction.CallbackContext data) => 
             OnDownClicked?.Invoke();
+
+        private void Interact(InputAction.CallbackContext context) => 
+            OnInteracted?.Invoke();
+
+        private DeviceType GetDevice(string name)
+        {
+            //Debug.Log(layout);
+            
+            if (name.IsMatch("keyboard"))
+                return DeviceType.Keyboard;
+            
+            if (name.IsMatch("gamepad"))
+                return DeviceType.Gamepad;
+            
+            if(name.IsMatch("mouse"))
+                return DeviceType.Mouse;
+
+            return DeviceType.UnknownDevice;
+        }
     }
 }

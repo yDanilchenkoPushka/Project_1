@@ -35,10 +35,6 @@ public class Bootstrapper : MonoBehaviour
         Initialize();
     }
 
-    private void Update()
-    {
-    }
-
     private void Initialize()
     {
         InteractiveButton interactiveButton;
@@ -78,8 +74,11 @@ public class Bootstrapper : MonoBehaviour
 
     private void RegisterServices()
     {
-        _services.RegisterSingle<ISimpleInput>(InputService());
-        _services.RegisterSingle<ISceneLoader>(new SceneLoader());
+        if(!_services.IsRegistered<ISimpleInput>())
+            _services.RegisterSingle<ISimpleInput>(InputService());
+        
+        if(!_services.IsRegistered<ISceneLoader>())
+            _services.RegisterSingle<ISceneLoader>(new SceneLoader());
     }
 
     private ISimpleInput InputService()

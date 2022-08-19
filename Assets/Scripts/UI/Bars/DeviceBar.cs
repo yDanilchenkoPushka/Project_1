@@ -1,6 +1,7 @@
 ﻿using Services.Input;
 using TMPro;
 using UnityEngine;
+using DeviceType = Data.DeviceType;
 
 namespace UI.Bars
 {
@@ -15,13 +16,13 @@ namespace UI.Bars
         {
             _simpleInput = simpleInput;
             
-            simpleInput.OnControlUpdated += UpdateControl;
+            simpleInput.OnDeviceUpdated += UpdateLabel;
         }
 
         public void DeInitialize() => 
-            _simpleInput.OnControlUpdated -= UpdateControl;
+            _simpleInput.OnDeviceUpdated -= UpdateLabel;
 
-        private void UpdateControl(string message) => 
-            _title.text = message;
+        private void UpdateLabel(DeviceType deviceType) => 
+            _title.text = deviceType.ToString();
     }
 }

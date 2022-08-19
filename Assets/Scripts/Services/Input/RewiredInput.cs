@@ -2,13 +2,15 @@
 using Other;
 using Rewired;
 using UnityEngine;
+using DeviceType = Data.DeviceType;
 
 namespace Services.Input
 {
     public class RewiredInput : ISimpleInput, IDeInitializable
     {
-        public event Action<string> OnControlUpdated;
+        public event Action<DeviceType> OnDeviceUpdated;
         public event Action OnTaped;
+        public event Action OnInteracted;
         public event Action OnUpClicked;
         public event Action OnDownClicked;
 
@@ -16,29 +18,46 @@ namespace Services.Input
             _player.GetAxis("Movement_hor"),
             _player.GetAxis("Movement_ver"));
 
+        public DeviceType LastDevice
+        {
+            get => _lastDevice;
+            
+            private set
+            {
+                _lastDevice = value;
+                
+                OnDeviceUpdated?.Invoke(value);
+            }
+        }
+
         private readonly Rewired.Player _player;
+        private DeviceType _lastDevice;
 
         public RewiredInput()
         {
             _player = ReInput.players.GetPlayer(0);
             
-            _player.AddInputEventDelegate(OnStartButtonDown, UpdateLoopType.Update, "Start");
-            _player.AddInputEventDelegate(OnTapButtonDown, UpdateLoopType.Update, "Click");
-            
             _player.AddInputEventDelegate(OnUpButtonDown, UpdateLoopType.Update, "Move_up");
             _player.AddInputEventDelegate(OnDownButtonDown, UpdateLoopType.Update, "Move_down");
+            _player.AddInputEventDelegate(OnTapButtonDown, UpdateLoopType.Update, "Click");
 
+            _player.AddInputEventDelegate(OnStartButtonDown, UpdateLoopType.Update, "Start");
+            
+            _player.AddInputEventDelegate(OnInteractButtonDown, UpdateLoopType.Update, "Interact");
+            
             _player.AddInputEventDelegate(UpdateDeviceInfo, UpdateLoopType.Update);
         }
 
         public void DeInitialize()
         {
-            _player.RemoveInputEventDelegate(OnStartButtonDown, UpdateLoopType.Update, "Start");
-            _player.RemoveInputEventDelegate(OnTapButtonDown, UpdateLoopType.Update, "Click");
-            
             _player.RemoveInputEventDelegate(OnUpButtonDown, UpdateLoopType.Update, "Move_up");
             _player.RemoveInputEventDelegate(OnDownButtonDown, UpdateLoopType.Update, "Move_down");
+            _player.RemoveInputEventDelegate(OnTapButtonDown, UpdateLoopType.Update, "Click");
             
+            _player.RemoveInputEventDelegate(OnStartButtonDown, UpdateLoopType.Update, "Start");
+            
+            _player.RemoveInputEventDelegate(OnInteractButtonDown, UpdateLoopType.Update, "Interact");
+
             _player.RemoveInputEventDelegate(UpdateDeviceInfo, UpdateLoopType.Update);
         }
 
@@ -77,8 +96,8 @@ namespace Services.Input
         {
             var mouse = ReInput.controllers.Mouse;
 
-            if(IsActiveMouse(mouse))
-                OnControlUpdated?.Invoke(mouse.name);
+            if (IsActiveMouse(mouse)) 
+                LastDevice = DeviceType.Mouse;
         }
 
         private void CheckJoysticks()
@@ -89,8 +108,8 @@ namespace Services.Input
             {
                 if (IsActiveJoystick(joystick))
                 {
-                    OnControlUpdated?.Invoke(joystick.name);
-                    
+                    LastDevice = DeviceType.Gamepad;
+
                     break;
                 }
             }
@@ -104,8 +123,8 @@ namespace Services.Input
             {
                 if (keyboard.GetButtonDown(i))
                 {
-                    OnControlUpdated?.Invoke(keyboard.name);
-                    
+                    LastDevice = DeviceType.Keyboard;
+      
                     break;
                 }
             }
@@ -157,6 +176,12 @@ namespace Services.Input
             }
 
             return false;
+        }
+
+        private void OnInteractButtonDown(InputActionEventData eventData)
+        {
+            if (eventData.GetButtonDown())
+                OnInteracted?.Invoke();
         }
     }
 }

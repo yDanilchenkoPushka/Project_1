@@ -44,6 +44,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""b6d8c5a3-292e-4151-94ff-ff3858723ea9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -178,6 +187,28 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""action"": ""Movement_ver"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""20103521-8aeb-43fd-a26d-09386cb28931"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""395c678c-1107-4c67-8fe6-53f54017ba3f"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -390,6 +421,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Movement_hor = m_Gameplay.FindAction("Movement_hor", throwIfNotFound: true);
         m_Gameplay_Movement_ver = m_Gameplay.FindAction("Movement_ver", throwIfNotFound: true);
+        m_Gameplay_Interact = m_Gameplay.FindAction("Interact", throwIfNotFound: true);
         // LevelMenu
         m_LevelMenu = asset.FindActionMap("LevelMenu", throwIfNotFound: true);
         m_LevelMenu_Start = m_LevelMenu.FindAction("Start", throwIfNotFound: true);
@@ -461,12 +493,14 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private IGameplayActions m_GameplayActionsCallbackInterface;
     private readonly InputAction m_Gameplay_Movement_hor;
     private readonly InputAction m_Gameplay_Movement_ver;
+    private readonly InputAction m_Gameplay_Interact;
     public struct GameplayActions
     {
         private @Controls m_Wrapper;
         public GameplayActions(@Controls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement_hor => m_Wrapper.m_Gameplay_Movement_hor;
         public InputAction @Movement_ver => m_Wrapper.m_Gameplay_Movement_ver;
+        public InputAction @Interact => m_Wrapper.m_Gameplay_Interact;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -482,6 +516,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Movement_ver.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement_ver;
                 @Movement_ver.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement_ver;
                 @Movement_ver.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement_ver;
+                @Interact.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnInteract;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -492,6 +529,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Movement_ver.started += instance.OnMovement_ver;
                 @Movement_ver.performed += instance.OnMovement_ver;
                 @Movement_ver.canceled += instance.OnMovement_ver;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
             }
         }
     }
@@ -598,6 +638,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     {
         void OnMovement_hor(InputAction.CallbackContext context);
         void OnMovement_ver(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
     public interface ILevelMenuActions
     {

@@ -1,6 +1,7 @@
 ﻿using Cube.Picked.Spawner;
 using Damage;
 using Data;
+using DefaultNamespace;
 using Services;
 using Services.Input;
 using Services.Scene;
@@ -23,7 +24,10 @@ public class Game : MonoBehaviour
 
     [SerializeField]
     private DeviceBar _deviceBar;
-        
+
+    [SerializeField]
+    private TipsBar _tipsBar;
+
     private Player _player;
     private CubeSpawner _cubeSpawner;
 
@@ -43,6 +47,7 @@ public class Game : MonoBehaviour
         _cubeSpawner.Initialize();
         
         _deviceBar.Construct(_simpleInput);
+        _tipsBar.Construct(_simpleInput);
 
         _simpleInput.OnTaped += CreatePlayer;
     }
@@ -50,7 +55,8 @@ public class Game : MonoBehaviour
     private void OnDestroy()
     {
         _deviceBar.DeInitialize();
-        
+        _tipsBar.DeInitialize();
+
         _simpleInput.OnTaped -= CreatePlayer;
     }
 
@@ -70,6 +76,7 @@ public class Game : MonoBehaviour
         _simpleInput.OnTaped -= CreatePlayer;
             
         _scoreBar.Construct(_player);
+        _tipsBar.Initialize(_player);
     }
 
     private void KillPlayer()
