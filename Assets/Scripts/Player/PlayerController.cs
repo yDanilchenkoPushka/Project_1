@@ -5,7 +5,7 @@ using Score;
 using Services.Input;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IDamageable, IScoreWriter, IScoreReader, IInteractiveHandler
+public class PlayerController : MonoBehaviour, IDamageable, IScoreWriter, IScoreReader, IInteractiveHandler
 {
     public event Action OnDamaged;
     public event Action<int> OnScoreUpdated;
