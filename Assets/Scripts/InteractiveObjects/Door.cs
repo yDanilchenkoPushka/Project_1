@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using DG.Tweening;
 
@@ -6,6 +7,10 @@ namespace DefaultNamespace
 {
     public class Door : MonoBehaviour, IInteractable
     {
+        public event Action<bool> OnStateChanged;
+        
+        public Vector3 Position => transform.position;
+        
         [SerializeField]
         private float _animationTime;
 
@@ -33,13 +38,13 @@ namespace DefaultNamespace
             _interactiveTrigger.OnExited += ExitInteractive;
         }
 
-        public void Interact()
+        public void Interact(object sender)
         {
             _interactiveTrigger.enabled = false;
             
             Open();
         }
-
+        
         private void EnterInteractive(IInteractiveHandler interactiveHandler)
         {
             interactiveHandler.EnterInteractive(this);
@@ -49,7 +54,7 @@ namespace DefaultNamespace
 
         private void ExitInteractive(IInteractiveHandler interactiveHandler)
         {
-            interactiveHandler.ExitInteractive();
+            interactiveHandler.ExitInteractive(this);
             
             SetOutline(false);
         }
@@ -60,6 +65,8 @@ namespace DefaultNamespace
         [ContextMenu("Open")]
         private void Open()
         {
+            OnStateChanged?.Invoke(true);
+            
             _animation.PlayForward();
 
             StartCoroutine(Close());
@@ -68,6 +75,8 @@ namespace DefaultNamespace
         private IEnumerator Close()
         {
             yield return new WaitForSeconds(_closingTime);
+            
+            OnStateChanged?.Invoke(false);
             
             _animation.PlayBackwards();
         }

@@ -2,5 +2,5 @@
 
 public interface IPickupHandler
 {
-    void IPickup(IPickable pickable);
+    void HandlePickup(IPickable pickable);
 }

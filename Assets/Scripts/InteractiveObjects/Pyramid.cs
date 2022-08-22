@@ -5,6 +5,8 @@ namespace DefaultNamespace
     [RequireComponent(typeof(Rigidbody))]
     public class Pyramid : MonoBehaviour, IInteractable
     {
+        public Vector3 Position => transform.position;
+        
         [SerializeField]
         private InteractiveTrigger _interactiveTrigger;
 
@@ -27,9 +29,9 @@ namespace DefaultNamespace
             handler.EnterInteractive(this);
 
         private void ExitInteractive(IInteractiveHandler handler) => 
-            handler.ExitInteractive();
+            handler.ExitInteractive(this);
 
-        public void Interact() => 
+        public void Interact(object sender) => 
             Jump();
 
         private void Jump() => 

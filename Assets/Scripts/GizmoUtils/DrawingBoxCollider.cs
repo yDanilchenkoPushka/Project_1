@@ -1,20 +1,22 @@
 ﻿using UnityEngine;
 
-namespace DefaultNamespace.Gizmos
+namespace GizmoUtils
 {
     [RequireComponent(typeof(BoxCollider))]
     public class DrawingBoxCollider : MonoBehaviour
     {
+        [SerializeField]
+        private Color _color = Color.magenta;
+        
         [SerializeField, HideInInspector]
         private BoxCollider _boxCollider;
 
         private void OnValidate() => 
             _boxCollider = GetComponent<BoxCollider>();
-
         
         private void OnDrawGizmos()
         {
-            Gizmos.color = new Color(Color.green.r, Color.green.g, Color.green.b, 0.4f);
+            Gizmos.color = _color;
 
             Vector3 size = new Vector3(
                 _boxCollider.size.x * transform.localScale.x,

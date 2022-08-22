@@ -6,5 +6,8 @@ namespace Services.Scene
     {
         public void Load(string sceneName) => 
             SceneManager.LoadScene(sceneName);
+
+        public void LoadAdditive(string sceneName) => 
+            SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
     }
 }

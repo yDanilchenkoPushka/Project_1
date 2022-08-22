@@ -7,5 +7,6 @@ namespace Player
         Rigidbody Rigidbody { get; }
         Transform Transform { get; }
         Vector3 Position { get; }
+        Collider Collider { get; }
     }
 }

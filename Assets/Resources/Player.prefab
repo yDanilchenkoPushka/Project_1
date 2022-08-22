@@ -126,4 +126,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 5848125729824148607}
-  _speed: 14
+  _collider: {fileID: 5848125729824148606}
+  _playerMovement:
+    _speed: 14
+  _playerPickup:
+    _pickupForce: 150

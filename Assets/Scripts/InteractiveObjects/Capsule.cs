@@ -1,12 +1,21 @@
-﻿using UnityEngine;
+﻿using Player;
+using UnityEngine;
 
 namespace DefaultNamespace
 {
-    public class Capsule : MonoBehaviour, IInteractable
+    public class Capsule : MonoBehaviour, IInteractable, IPickable
     {
+        public Rigidbody Rigidbody => _rigidbody;
+        public Transform Transform => transform;
+        public Vector3 Position => transform.position;
+        public Collider Collider => _collider;
+        
         [SerializeField]
         private InteractiveTrigger _interactiveTrigger;
-        
+
+        [SerializeField]
+        private Collider _collider;
+
         [SerializeField, HideInInspector]
         private Rigidbody _rigidbody;
 
@@ -23,11 +32,12 @@ namespace DefaultNamespace
             handler.EnterInteractive(this);
 
         private void ExitInteractive(IInteractiveHandler handler) => 
-            handler.ExitInteractive();
+            handler.ExitInteractive(this);
 
-        public void Interact()
+        public void Interact(object sender)
         {
-            Debug.Log("Interact with capsule");
+            if(sender is IPickupHandler handler)
+                handler.HandlePickup(this);
         }
     }
 }

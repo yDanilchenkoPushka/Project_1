@@ -28,13 +28,18 @@ public class Game : MonoBehaviour
     [SerializeField]
     private TipsBar _tipsBar;
 
-    private Player _player;
-    private CubeSpawner _cubeSpawner;
+    [SerializeField]
+    private Door _door;
 
+    [SerializeField]
+    private Camera _camera;
+
+    private PlayerController _playerController;
+    private CubeSpawner _cubeSpawner;
     private ISceneLoader _sceneLoader;
     private ISimpleInput _simpleInput;
 
-    private bool HasPlayer => _player != null;
+    private bool HasPlayer => _playerController != null;
 
     private void Awake()
     {
@@ -47,47 +52,64 @@ public class Game : MonoBehaviour
         _cubeSpawner.Initialize();
         
         _deviceBar.Construct(_simpleInput);
-        _tipsBar.Construct(_simpleInput);
+        _tipsBar.Construct(_simpleInput, _camera);
 
         _simpleInput.OnTaped += CreatePlayer;
+
+        _door.OnStateChanged += OnDoorStateChanged;
     }
-        
+
     private void OnDestroy()
     {
         _deviceBar.DeInitialize();
         _tipsBar.DeInitialize();
 
         _simpleInput.OnTaped -= CreatePlayer;
+        
+        _door.OnStateChanged -= OnDoorStateChanged;
     }
+
+    private void Update() => 
+        _tipsBar.Tick();
 
     private void CreatePlayer()
     {
         if (HasPlayer)
             return;
             
-        Player playerPrefab = Resources.Load<Player>("Player");
+        PlayerController playerControllerPrefab = Resources.Load<PlayerController>("Player");
             
-        _player = Instantiate(playerPrefab);
-        _player.Construct(_simpleInput);
-        _player.Spawn(_spawnPoint.Position);
+        _playerController = Instantiate(playerControllerPrefab);
+        _playerController.Construct(_simpleInput);
+        _playerController.Spawn(_spawnPoint.Position);
             
-        _player.OnDamaged += KillPlayer;
+        _playerController.OnDamaged += KillPlayerController;
             
         _simpleInput.OnTaped -= CreatePlayer;
             
-        _scoreBar.Construct(_player);
-        _tipsBar.Initialize(_player);
+        _scoreBar.Construct(_playerController);
+        _tipsBar.Initialize(_playerController);
     }
 
-    private void KillPlayer()
+    private void KillPlayerController()
     {
         _scoreBar.DeInitialize();
             
-        _player.OnDamaged -= KillPlayer;
+        _playerController.OnDamaged -= KillPlayerController;
             
         LoadMainMenu();
     }
 
     private void LoadMainMenu() => 
         _sceneLoader.Load(SceneInfos.MAIN_MENU);
+
+    private void OnDoorStateChanged(bool isOpened)
+    {
+        if (isOpened)
+        {
+            _sceneLoader.LoadAdditive(SceneInfos.LEVEL_2);
+
+            _door.OnStateChanged -= OnDoorStateChanged;
+        }
+    }
 }

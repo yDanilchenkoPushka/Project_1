@@ -3,8 +3,8 @@ using DefaultNamespace;
 
 public interface IInteractiveHandler
 {
-    event Action OnInteractiveEntered;
-    event Action OnInteractiveExited;
+    event Action<IInteractable> OnInteractiveEntered;
+    event Action<IInteractable> OnInteractiveExited;
     void EnterInteractive(IInteractable interactable);
-    void ExitInteractive();
+    void ExitInteractive(IInteractable interactable);
 }
