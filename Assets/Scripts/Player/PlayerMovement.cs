@@ -20,11 +20,12 @@ namespace Player
         }
 
         public void FixedTick() => 
-            Move(_simpleInput.Axis);
+            Move(_simpleInput.MovementAxis);
 
         private void Move(Vector2 direction)
         {
             Vector3 movement = new Vector3(direction.x * _speed, 0, direction.y * _speed);
+            
             _rigidbody.AddForce(movement, ForceMode.Acceleration);
         }
     }

@@ -53,6 +53,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""5fd84af5-d1cf-4dbc-8fa0-62982522db8a"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -209,6 +218,72 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""09cbd1d4-0385-4bbd-8eec-5f3bd875c841"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""d7a0bab0-8ed8-42b7-a854-8956e7377d80"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""d7ac0f76-a4e0-46f8-a279-cc18706f7cbf"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""33693260-40fe-485d-a686-7af9134c0340"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""ea112b93-7c01-4dd3-8193-fadba493008d"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""77e65fcc-61a5-4ff8-9cb2-821a5aadab75"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -422,6 +497,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Gameplay_Movement_hor = m_Gameplay.FindAction("Movement_hor", throwIfNotFound: true);
         m_Gameplay_Movement_ver = m_Gameplay.FindAction("Movement_ver", throwIfNotFound: true);
         m_Gameplay_Interact = m_Gameplay.FindAction("Interact", throwIfNotFound: true);
+        m_Gameplay_Look = m_Gameplay.FindAction("Look", throwIfNotFound: true);
         // LevelMenu
         m_LevelMenu = asset.FindActionMap("LevelMenu", throwIfNotFound: true);
         m_LevelMenu_Start = m_LevelMenu.FindAction("Start", throwIfNotFound: true);
@@ -494,6 +570,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Movement_hor;
     private readonly InputAction m_Gameplay_Movement_ver;
     private readonly InputAction m_Gameplay_Interact;
+    private readonly InputAction m_Gameplay_Look;
     public struct GameplayActions
     {
         private @Controls m_Wrapper;
@@ -501,6 +578,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         public InputAction @Movement_hor => m_Wrapper.m_Gameplay_Movement_hor;
         public InputAction @Movement_ver => m_Wrapper.m_Gameplay_Movement_ver;
         public InputAction @Interact => m_Wrapper.m_Gameplay_Interact;
+        public InputAction @Look => m_Wrapper.m_Gameplay_Look;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -519,6 +597,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Interact.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnInteract;
+                @Look.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLook;
+                @Look.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLook;
+                @Look.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLook;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -532,6 +613,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @Look.started += instance.OnLook;
+                @Look.performed += instance.OnLook;
+                @Look.canceled += instance.OnLook;
             }
         }
     }
@@ -639,6 +723,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnMovement_hor(InputAction.CallbackContext context);
         void OnMovement_ver(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnLook(InputAction.CallbackContext context);
     }
     public interface ILevelMenuActions
     {

@@ -13,7 +13,8 @@ namespace Services.Input
         event Action OnUpClicked;
         event Action OnDownClicked;
 
-        Vector2 Axis { get; }
+        Vector2 MovementAxis { get; }
+        Vector2 LookAxis { get; }
         DeviceType LastDevice { get; }
     }
 }

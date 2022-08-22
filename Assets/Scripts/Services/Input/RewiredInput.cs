@@ -14,9 +14,13 @@ namespace Services.Input
         public event Action OnUpClicked;
         public event Action OnDownClicked;
 
-        public Vector2 Axis => new Vector2(
+        public Vector2 MovementAxis => new Vector2(
             _player.GetAxis("Movement_hor"),
             _player.GetAxis("Movement_ver"));
+
+        public Vector2 LookAxis => new Vector2(
+            _player.GetAxis("Look_hor"),
+            _player.GetAxis("Look_ver"));
 
         public DeviceType LastDevice
         {

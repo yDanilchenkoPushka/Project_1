@@ -1,4 +1,5 @@
 ﻿using System;
+using UI.Bars;
 using UnityEngine;
 
 namespace Player
@@ -18,12 +19,14 @@ namespace Player
         private Transform _transform;
         private Rigidbody _rigidbody;
         private Collider _collider;
+        private ILookable _lookable;
 
-        public void Construct(Transform transform, Rigidbody rigidbody, Collider collider)
+        public void Construct(Transform transform, Rigidbody rigidbody, Collider collider, ILookable lookable)
         {
             _transform = transform;
             _rigidbody = rigidbody;
             _collider = collider;
+            _lookable = lookable;
         }
 
         public void Tick()
@@ -78,14 +81,7 @@ namespace Player
             _pickable = null;
         }
 
-        private Vector3 GetForwardPosition()
-        {
-            Vector3 movementDirection = _rigidbody.velocity.normalized;
-            
-            if(movementDirection.magnitude < 0.1f)
-                movementDirection = Vector3.forward;
-            
-            return _transform.position + movementDirection * _holdDistance;
-        }
+        private Vector3 GetForwardPosition() => 
+            _transform.position + _lookable.LookDirection * _holdDistance;
     }
 }

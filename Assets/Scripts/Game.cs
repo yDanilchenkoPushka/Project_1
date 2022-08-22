@@ -2,6 +2,7 @@
 using Damage;
 using Data;
 using DefaultNamespace;
+using Enemy;
 using Services;
 using Services.Input;
 using Services.Scene;
@@ -27,12 +28,18 @@ public class Game : MonoBehaviour
 
     [SerializeField]
     private TipsBar _tipsBar;
+    
+    [SerializeField]
+    private ArrowBar _arrowBar;
 
     [SerializeField]
     private Door _door;
 
     [SerializeField]
     private Camera _camera;
+
+    [SerializeField]
+    private EnemyController _enemyController;
 
     private PlayerController _playerController;
     private CubeSpawner _cubeSpawner;
@@ -53,6 +60,7 @@ public class Game : MonoBehaviour
         
         _deviceBar.Construct(_simpleInput);
         _tipsBar.Construct(_simpleInput, _camera);
+        _arrowBar.Initialize();
 
         _simpleInput.OnTaped += CreatePlayer;
 
@@ -69,8 +77,11 @@ public class Game : MonoBehaviour
         _door.OnStateChanged -= OnDoorStateChanged;
     }
 
-    private void Update() => 
+    private void Update()
+    {
         _tipsBar.Tick();
+        _arrowBar.Tick();
+    }
 
     private void CreatePlayer()
     {
@@ -83,12 +94,15 @@ public class Game : MonoBehaviour
         _playerController.Construct(_simpleInput);
         _playerController.Spawn(_spawnPoint.Position);
             
-        _playerController.OnDamaged += KillPlayerController;
-            
-        _simpleInput.OnTaped -= CreatePlayer;
+        _enemyController.Construct(_playerController);
             
         _scoreBar.Construct(_playerController);
         _tipsBar.Initialize(_playerController);
+        _arrowBar.Construct(_playerController, _playerController);
+        
+        _playerController.OnDamaged += KillPlayerController;
+            
+        _simpleInput.OnTaped -= CreatePlayer;
     }
 
     private void KillPlayerController()
