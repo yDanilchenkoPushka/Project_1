@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections;
-using UnityEngine;
 using DG.Tweening;
+using Interactive;
+using UnityEngine;
 
-namespace DefaultNamespace
+namespace InteractiveObjects
 {
     public class Door : MonoBehaviour, IInteractable
     {
@@ -20,9 +21,6 @@ namespace DefaultNamespace
         [SerializeField]
         private Outline _outline;
 
-        [SerializeField]
-        private InteractiveTrigger _interactiveTrigger;
-
         private Tween _animation;
 
         public void Awake()
@@ -33,31 +31,28 @@ namespace DefaultNamespace
                 .Pause();
             
             SetOutline(false);
-
-            _interactiveTrigger.OnEntered += EnterInteractive;
-            _interactiveTrigger.OnExited += ExitInteractive;
         }
 
         public void Interact(object sender)
         {
-            _interactiveTrigger.enabled = false;
+            Debug.Log("Interact with door");
             
             Open();
         }
         
-        private void EnterInteractive(IInteractiveHandler interactiveHandler)
-        {
-            interactiveHandler.EnterInteractive(this);
-            
-            SetOutline(true);
-        }
-
-        private void ExitInteractive(IInteractiveHandler interactiveHandler)
-        {
-            interactiveHandler.ExitInteractive(this);
-            
-            SetOutline(false);
-        }
+        // private void EnterInteractive(IInteractiveHandler interactiveHandler)
+        // {
+        //     interactiveHandler.EnterInteractive(this);
+        //     
+        //     SetOutline(true);
+        // }
+        //
+        // private void ExitInteractive(IInteractiveHandler interactiveHandler)
+        // {
+        //     interactiveHandler.ExitInteractive(this);
+        //     
+        //     SetOutline(false);
+        // }
         
         private void SetOutline(bool isOutline) => 
             _outline.enabled = isOutline;

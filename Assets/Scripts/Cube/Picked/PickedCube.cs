@@ -1,4 +1,6 @@
 ﻿using System;
+using Characters.Enemy.Patrol;
+using Interactive;
 using Score;
 using UnityEngine;
 
@@ -7,7 +9,7 @@ namespace Cube.Picked
     public class PickedCube : MonoBehaviour, IBoundable
     {
         public event Action<PickedCube> OnPicked;
-        
+        public Vector3 Position => transform.position;
         public Bounds Bound => _boxCollider.bounds;
         
         public Vector3 Size => new Vector3(
@@ -54,12 +56,17 @@ namespace Cube.Picked
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out IScoreWriter scoreable))
+            if (other.TryGetComponent(out IPickedTest handler))
             {
-                scoreable.Accrue(1);
+                handler.TestHandlePickup();
                 
                 OnPicked?.Invoke(this);
             }
         }
+    }
+
+    public interface IPickedTest
+    {
+        void TestHandlePickup();
     }
 }

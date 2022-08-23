@@ -2,31 +2,28 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace DefaultNamespace
+[RequireComponent(typeof(NavMeshModifierVolume))]
+public class DrawingNavMeshModifierVolume : MonoBehaviour
 {
-    [RequireComponent(typeof(NavMeshModifierVolume))]
-    public class DrawingNavMeshModifierVolume : MonoBehaviour
-    {
-        [SerializeField] 
-        private Color _color = Color.magenta;
+    [SerializeField] 
+    private Color _color = Color.magenta;
         
-        [SerializeField]
-        private Vector3 _size = Vector3.one;
+    [SerializeField]
+    private Vector3 _size = Vector3.one;
 
-        [SerializeField, HideInInspector]
-        private NavMeshModifierVolume _navMeshModifierVolume;
+    [SerializeField, HideInInspector]
+    private NavMeshModifierVolume _navMeshModifierVolume;
 
-        private void OnValidate() => 
-            _navMeshModifierVolume = GetComponent<NavMeshModifierVolume>();
+    private void OnValidate() => 
+        _navMeshModifierVolume = GetComponent<NavMeshModifierVolume>();
 
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = _color;
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = _color;
 
-            Vector3 position = transform.TransformPoint(_navMeshModifierVolume.center);
-            Vector3 size = _navMeshModifierVolume.size;
+        Vector3 position = transform.TransformPoint(_navMeshModifierVolume.center);
+        Vector3 size = _navMeshModifierVolume.size;
 
-            Gizmos.DrawCube(position, size); 
-        }
+        Gizmos.DrawCube(position, size); 
     }
 }

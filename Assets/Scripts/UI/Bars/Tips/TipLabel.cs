@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-namespace UI.Bars
+namespace UI.Bars.Tips
 {
     public class TipLabel : MonoBehaviour
     {

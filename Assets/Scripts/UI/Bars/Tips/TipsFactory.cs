@@ -1,7 +1,6 @@
-﻿using Other;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace UI.Bars
+namespace UI.Bars.Tips
 {
     public class TipsFactory
     {

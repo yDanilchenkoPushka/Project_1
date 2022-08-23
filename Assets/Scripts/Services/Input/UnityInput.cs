@@ -1,5 +1,5 @@
 ﻿using System;
-using DefaultNamespace.Extensions;
+using Extensions;
 using Other;
 using UnityEngine;
 using UnityEngine.InputSystem;

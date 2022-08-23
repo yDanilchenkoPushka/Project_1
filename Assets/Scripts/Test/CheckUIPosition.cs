@@ -1,7 +1,8 @@
 ﻿using TMPro;
 using UnityEngine;
+using Utilities;
 
-namespace Player.Test
+namespace Test
 {
     public class CheckUIPosition : MonoBehaviour
     {

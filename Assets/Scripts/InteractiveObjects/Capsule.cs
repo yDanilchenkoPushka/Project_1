@@ -1,7 +1,8 @@
-﻿using Player;
+﻿using Characters.Player;
+using Interactive;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace InteractiveObjects
 {
     public class Capsule : MonoBehaviour, IInteractable, IPickable
     {
@@ -9,9 +10,6 @@ namespace DefaultNamespace
         public Transform Transform => transform;
         public Vector3 Position => transform.position;
         public Collider Collider => _collider;
-        
-        [SerializeField]
-        private InteractiveTrigger _interactiveTrigger;
 
         [SerializeField]
         private Collider _collider;
@@ -21,18 +19,6 @@ namespace DefaultNamespace
 
         private void OnValidate() => 
             _rigidbody = GetComponent<Rigidbody>();
-
-        private void Awake()
-        {
-            _interactiveTrigger.OnEntered += EnterInteractive;
-            _interactiveTrigger.OnExited += ExitInteractive;
-        }
-        
-        private void EnterInteractive(IInteractiveHandler handler) => 
-            handler.EnterInteractive(this);
-
-        private void ExitInteractive(IInteractiveHandler handler) => 
-            handler.ExitInteractive(this);
 
         public void Interact(object sender)
         {

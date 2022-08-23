@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UI.Bars
+public interface ILookable
 {
-    public interface ILookable
-    {
-        Vector3 LookDirection { get; }
-    }
+    Vector3 LookDirection { get; }
 }

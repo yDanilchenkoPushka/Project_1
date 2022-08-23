@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
-using DefaultNamespace;
-using Player;
+using Characters.Player;
+using Interactive;
 using Services.Input;
 using UnityEngine;
+using Utilities;
 using DeviceType = Data.DeviceType;
 
-namespace UI.Bars
+namespace UI.Bars.Tips
 {
     [RequireComponent(typeof(Canvas))]
     public class TipsBar : MonoBehaviour
@@ -26,7 +27,7 @@ namespace UI.Bars
         private TipLabel _labelPrefab;
 
         private ISimpleInput _simpleInput;
-        private IInteractiveHandler _interactiveHandler;
+        private IInterectionEvents _interectionEvents;
 
         private Dictionary<IInteractable, TipLabel> _labels = new Dictionary<IInteractable, TipLabel>();
         private TipsFactory _tipsFactory;
@@ -40,28 +41,30 @@ namespace UI.Bars
             _tipsFactory = new TipsFactory(_labelPrefab, GetComponent<RectTransform>());
         }
 
-        public void Initialize(IInteractiveHandler interactiveHandler)
+        public void Initialize(IOut<IInterectionEvents> interectionEvents)
         {
-            _interactiveHandler = interactiveHandler;
+            _interectionEvents = interectionEvents.Value;
             
             _simpleInput.OnDeviceUpdated += UpdateLabels;
             
-            _interactiveHandler.OnInteractiveEntered += OnInteractiveEntered;
-            _interactiveHandler.OnInteractiveExited += OnInteractiveExited;
+            _interectionEvents.OnEntered += OnInteractiveEntered;
+            _interectionEvents.OnExited += OnInteractiveExited;
         }
 
-        public void Tick() => 
+        public void Tick()
+        {
             UpdateLabels();
+        }
 
         public void DeInitialize()
         {
             _simpleInput.OnDeviceUpdated -= UpdateLabels;
             
-            if (_interactiveHandler == null)
+            if (_interectionEvents == null)
                 return;
 
-            _interactiveHandler.OnInteractiveEntered -= OnInteractiveEntered;
-            _interactiveHandler.OnInteractiveExited -= OnInteractiveExited;
+            _interectionEvents.OnEntered -= OnInteractiveEntered;
+            _interectionEvents.OnExited -= OnInteractiveExited;
         }
 
         private void UpdateLabels(DeviceType deviceType) => 

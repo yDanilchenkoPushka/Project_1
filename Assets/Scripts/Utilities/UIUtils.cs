@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Player
+namespace Utilities
 {
     public static class UIUtils
     {
