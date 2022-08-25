@@ -1,11 +1,14 @@
 ﻿using System;
 using Extensions;
 using Other;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.PS4;
 using DeviceType = Data.DeviceType;
+using String = System.String;
 
 namespace Services.Input
 {
@@ -38,11 +41,18 @@ namespace Services.Input
         private readonly Controls _controls;
         private DeviceType _lastDevice;
 
-        public UnityInput()
+        public UnityInput(TextMeshProUGUI logLabel)
         {
-            Debug.Log("Create UnityInput");
-            
             _controls = new Controls();
+
+            var devices = InputSystem.devices;
+            string log = String.Empty;
+
+            foreach (var device in devices)
+            {
+                log += device.name + "\n";
+            }
+            logLabel.text = log;
             
             _controls.Enable();
             

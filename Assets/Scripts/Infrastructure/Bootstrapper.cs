@@ -13,6 +13,9 @@ namespace Infrastructure
     public class Bootstrapper : MonoBehaviour
     {
         [SerializeField]
+        private TextMeshProUGUI _logLabel;
+        
+        [SerializeField]
         private TextMeshProUGUI _log;
         
         [SerializeField]
@@ -101,7 +104,7 @@ namespace Infrastructure
         return new RewiredInput();
 #else
             _log.text = "UnityInput";
-            return new UnityInput();
+            return new UnityInput(_logLabel);
 #endif
         }
     }
