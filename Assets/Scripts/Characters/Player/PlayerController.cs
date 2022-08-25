@@ -12,14 +12,12 @@ namespace Characters.Player
     [RequireComponent(typeof(Rigidbody),
         typeof(Collider))]
     public class PlayerController : MonoBehaviour, IDamageable, IScoreWriter, IScoreReader,
-        IPickupHandler, ILookable, IPositionable, IEnemyTarget, IOut<IInterectionEvents>, IPickedTest
+        IPickupHandler, ILookable, IPositionable, IEnemyTarget, IOut<IInteractionEvents>, ICollectHandler
     {
-        IInterectionEvents IOut<IInterectionEvents>.Value => _playerInteraction;
+        IInteractionEvents IOut<IInteractionEvents>.Value => _playerInteraction;
         
         public event Action OnDamaged;
         public event Action<int> OnScoreUpdated;
-        public event Action<IInteractable> OnInteractiveEntered;
-        public event Action<IInteractable> OnInteractiveExited;
 
         public Vector3 Position => transform.position;
         public Vector3 LookDirection => _lookDirection;
@@ -116,7 +114,7 @@ namespace Characters.Player
                 _lookDirection = new Vector3(look.x, 0, look.y).normalized;
         }
 
-        public void TestHandlePickup()
+        public void HandleCollecting()
         {
             Accrue(1);
         }

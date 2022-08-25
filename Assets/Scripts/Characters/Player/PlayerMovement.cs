@@ -35,8 +35,11 @@ namespace Characters.Player
         
         private void OnAreaChanged(float coast)
         {
+            float drag = (coast < 0)
+                ? 0
+                : (coast - 1f) * 5f;
             
-            _rigidbody.drag = coast - 1f;
+            _rigidbody.drag = drag;
         }
     }
 }

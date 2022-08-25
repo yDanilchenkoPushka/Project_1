@@ -1,4 +1,5 @@
-﻿using Infrastructure;
+﻿using Characters.Player.Characters.Enemy;
+using Infrastructure;
 using Infrastructure.Processors.Tick;
 using UnityEngine;
 using UnityEngine.AI;
@@ -14,9 +15,10 @@ namespace Characters.Enemy.Following.States
         private readonly ITargetInfo _targetInfo;
         private readonly float _minDistance;
         private readonly ITickProcessor _tickProcessor;
+        private readonly SpeedHandler _speedHandler;
 
         public FollowingState(IStateMachine stateMachine, Transform transform, NavMeshAgent agent, float minDistance, 
-            ITargetInfo targetInfo, ITickProcessor tickProcessor)
+            ITargetInfo targetInfo, ITickProcessor tickProcessor, SpeedHandler speedHandler)
         {
             _stateMachine = stateMachine;
             _transform = transform;
@@ -24,6 +26,7 @@ namespace Characters.Enemy.Following.States
             _minDistance = minDistance;
             _targetInfo = targetInfo;
             _tickProcessor = tickProcessor;
+            _speedHandler = speedHandler;
         }
 
         public void Enter()
@@ -40,8 +43,11 @@ namespace Characters.Enemy.Following.States
             _targetInfo.OnTargetUpdated -= ToNextState;
         }
 
-        public void Tick() => 
+        public void Tick()
+        {
+            _speedHandler.Tick();
             Follow();
+        }
 
         private void Follow()
         {

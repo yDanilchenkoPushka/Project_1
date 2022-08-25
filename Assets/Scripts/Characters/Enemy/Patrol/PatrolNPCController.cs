@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Characters.Player.Characters.Enemy;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace Characters.Enemy.Patrol
@@ -16,6 +17,8 @@ namespace Characters.Enemy.Patrol
 
         private IPath _path;
         
+        private SpeedHandler _speedHandler;
+
         private void OnValidate()
         {
             _agent = GetComponent<NavMeshAgent>();
@@ -24,12 +27,16 @@ namespace Characters.Enemy.Patrol
         public void Construct(IPath path)
         {
             _path = path;
+
+            _speedHandler = new SpeedHandler(_agent, transform);
             
             transform.position = _path.NextPosition(loopMode);
         }
 
         private void Update()
         {
+            _speedHandler.Tick();
+
             if (_agent.pathPending)
                 return;
             

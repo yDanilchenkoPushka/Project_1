@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.AI;
+using Utilities;
 
 namespace Characters.Player
 {
@@ -9,8 +9,6 @@ namespace Characters.Player
         public event Action<float> OnAreaChanged;
         
         private Transform _transform;
-
-        private int _currentAreaIndex = -1;
 
         public void Construct(Transform transform) => 
             _transform = transform;
@@ -23,31 +21,9 @@ namespace Characters.Player
             Vector3 position = _transform.position;
 
             position.y -= 0.5f;
-        
-            NavMeshHit hit;
-            NavMesh.SamplePosition(position, out hit, 0.1f, NavMesh.AllAreas);
 
-            int index = IndexFromMask(hit.mask);
-
-            if (_currentAreaIndex != index)
-            {
-                _currentAreaIndex = index;
-                
-                float coast = NavMesh.GetAreaCost(_currentAreaIndex);
-                
+            if (NavMeshUtils.TryGetCoast(position, out float coast)) 
                 OnAreaChanged?.Invoke(coast);
-            }
-        }
-
-        private int IndexFromMask(int mask)
-        {
-            for (int i = 0; i < 32; ++i)
-            {
-                if ((1 << i) == mask)
-                    return i;
-            }
-            
-            return -1;
         }
     }
 }

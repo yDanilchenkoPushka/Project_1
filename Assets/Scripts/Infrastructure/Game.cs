@@ -51,11 +51,11 @@ namespace Infrastructure
         [SerializeField]
         private FollowingNPCController _followingNpc;
         
-        // [SerializeField]
-        // private PatrolNPCController _patrolNpc;
+        [SerializeField]
+        private PatrolNPCController _patrolNpc;
         
-        // [SerializeField]
-        // private BloodhoundNPCController _bloodhoundNpc;
+        [SerializeField]
+        private BloodhoundNPCController _bloodhoundNpc;
 
         private PlayerController _playerController;
         private CubeSpawner _cubeSpawner;
@@ -79,12 +79,12 @@ namespace Infrastructure
             _arrowBar.Initialize();
 
             _followingNpc.Construct(AllServices.Container.Single<ITickProcessor>());
-            // _patrolNpc.Construct(_path);
-            //_bloodhoundNpc.Construct(_cubeSpawnArea);
+            _patrolNpc.Construct(_path);
+            _bloodhoundNpc.Construct(_cubeSpawnArea);
         
             _simpleInput.OnTaped += CreatePlayer;
 
-            _door.OnStateChanged += OnDoorStateChanged;
+            _door.OnOpened += OnDoorOpened;
         }
 
         private void OnDestroy()
@@ -94,7 +94,7 @@ namespace Infrastructure
 
             _simpleInput.OnTaped -= CreatePlayer;
         
-            _door.OnStateChanged -= OnDoorStateChanged;
+            _door.OnOpened -= OnDoorOpened;
         }
 
         private void Update()
@@ -134,15 +134,12 @@ namespace Infrastructure
 
         private void LoadMainMenu() => 
             _sceneLoader.Load(SceneInfos.MAIN_MENU);
-
-        private void OnDoorStateChanged(bool isOpened)
+        
+        private void OnDoorOpened()
         {
-            if (isOpened)
-            {
-                _sceneLoader.LoadAdditive(SceneInfos.LEVEL_2);
-
-                _door.OnStateChanged -= OnDoorStateChanged;
-            }
+            _sceneLoader.LoadAdditive(SceneInfos.LEVEL_2);
+            
+            _door.OnOpened -= OnDoorOpened;
         }
     }
 }

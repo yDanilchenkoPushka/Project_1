@@ -1,5 +1,6 @@
 ﻿using System;
 using Characters.Enemy.Following.States;
+using Characters.Player.Characters.Enemy;
 using Infrastructure;
 using Infrastructure.Processors.Tick;
 using Interactive;
@@ -12,16 +13,20 @@ namespace Characters.Enemy.Following
     public class FollowingNPCController : MonoBehaviour, IInteractable, ITargetInfo
     {
         public event Action OnTargetUpdated;
+        
         public bool HasTarget => _target != null;
         public IEnemyTarget Target => _target;
 
+        public bool CanInteract => true;
         public Vector3 Position => transform.position;
-
+        
         private const float MinDistance = 2f;
 
         [SerializeField, HideInInspector]
         private NavMeshAgent _agent;
 
+        private SpeedHandler _speedHandler;
+        
         private IStateMachine _stateMachine;
         private IEnemyTarget _target;
         
@@ -32,15 +37,26 @@ namespace Characters.Enemy.Following
 
         public void Construct(ITickProcessor tickProcessor)
         {
+            _speedHandler = new SpeedHandler(_agent, transform);
+            
             StateMachine stateMachine = new StateMachine();
             
             _stateMachine = stateMachine;
             
             stateMachine.RegisterStates(
                 new IdleState(_stateMachine, this),
-                new FollowingState(_stateMachine, transform, _agent, MinDistance, this, tickProcessor));
+                new FollowingState(_stateMachine, transform, _agent, MinDistance, 
+                    this, tickProcessor, _speedHandler));
 
             _stateMachine.ChangeState<IdleState>();
+        }
+        
+        public void EnterInteractive()
+        {
+        }
+
+        public void ExitInteractive()
+        {
         }
 
         public void Interact(object sender)

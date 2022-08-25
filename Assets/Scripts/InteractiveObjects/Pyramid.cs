@@ -6,8 +6,9 @@ namespace InteractiveObjects
     [RequireComponent(typeof(Rigidbody))]
     public class Pyramid : MonoBehaviour, IInteractable
     {
+        public bool CanInteract => true;
         public Vector3 Position => transform.position;
-
+        
         [SerializeField]
         private float _force;
 
@@ -17,6 +18,14 @@ namespace InteractiveObjects
         private void OnValidate() => 
             _rigidbody = GetComponent<Rigidbody>();
 
+        public void EnterInteractive()
+        {
+        }
+
+        public void ExitInteractive()
+        {
+        }
+        
         public void Interact(object sender) => 
             Jump();
 

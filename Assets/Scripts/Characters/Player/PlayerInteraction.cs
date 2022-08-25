@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Characters.Player
 {
-    public class PlayerInteraction : IInterectionEvents
+    public class PlayerInteraction : IInteractionEvents
     {
         public event Action<IInteractable> OnEntered;
         public event Action<IInteractable> OnExited;
@@ -47,8 +47,10 @@ namespace Characters.Player
             {
                 if (_interactables.Contains(interaction))
                     return;
-        
+                
                 _interactables.Add(interaction);
+
+                interaction.EnterInteractive();
                 
                 OnEntered?.Invoke(interaction);
                 OnUpdated?.Invoke();
@@ -66,6 +68,8 @@ namespace Characters.Player
                 {
                     _interactables.Remove(interaction);
                     
+                    interaction.ExitInteractive();
+                    
                     OnUpdated?.Invoke();
                     OnExited?.Invoke(interaction);
                 }
@@ -74,8 +78,11 @@ namespace Characters.Player
         
         private void Interact()
         {
-            for (int i = 0; i < _interactables.Count; i++) 
-                _interactables[i].Interact(_sender);
+            for (int i = 0; i < _interactables.Count; i++)
+            {
+                if(_interactables[i].CanInteract)
+                    _interactables[i].Interact(_sender);
+            }
         }
     }
 }

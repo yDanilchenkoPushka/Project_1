@@ -1,4 +1,5 @@
 ﻿using System;
+using Characters.Player.Characters.Enemy;
 using Cube.Picked;
 using Cube.Picked.Spawner;
 using Interactive;
@@ -8,15 +9,14 @@ using UnityEngine.AI;
 namespace Characters.Enemy.Bloodhound
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public class BloodhoundNPCController : MonoBehaviour, IPickedTest
+    public class BloodhoundNPCController : MonoBehaviour, ICollectHandler
     {
-        public event Action<IInteractable> OnInteractiveEntered;
-        public event Action<IInteractable> OnInteractiveExited;
-        
         private const float StoppingDistance = 0.5f;
 
         [SerializeField, HideInInspector]
         private NavMeshAgent _agent;
+
+        private SpeedHandler _speedHandler;
         
         private CubeSpawnArea _spawnArea;
 
@@ -31,11 +31,15 @@ namespace Characters.Enemy.Bloodhound
         {
             _spawnArea = spawnArea;
 
+            _speedHandler = new SpeedHandler(_agent, transform);
+
             GoToNextPosition();
         }
 
         private void Update()
         {
+            _speedHandler.Tick();
+            
             if (_agent.pathPending)
                 return;
             
@@ -49,6 +53,11 @@ namespace Characters.Enemy.Bloodhound
             _agent.SetDestination(_targetPosition);
         }
 
+        public void HandleCollecting()
+        {
+            Debug.Log("Agent raised the cube!");
+        }
+
         private void OnDrawGizmos()
         {
             if (Application.isPlaying)
@@ -57,11 +66,6 @@ namespace Characters.Enemy.Bloodhound
                 
                 Gizmos.DrawSphere(_targetPosition, 0.4f);
             }
-        }
-
-        public void TestHandlePickup()
-        {
-            Debug.Log("Agent raised the cube!");
         }
     }
 }

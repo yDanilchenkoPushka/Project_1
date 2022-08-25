@@ -3,7 +3,7 @@ using Interactive;
 
 namespace Characters.Player
 {
-    public interface IInterectionEvents
+    public interface IInteractionEvents
     {
         event Action<IInteractable> OnEntered;
         event Action<IInteractable> OnExited;

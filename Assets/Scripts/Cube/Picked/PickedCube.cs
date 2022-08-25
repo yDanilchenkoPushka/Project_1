@@ -56,17 +56,12 @@ namespace Cube.Picked
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out IPickedTest handler))
+            if (other.TryGetComponent(out ICollectHandler handler))
             {
-                handler.TestHandlePickup();
+                handler.HandleCollecting();
                 
                 OnPicked?.Invoke(this);
             }
         }
-    }
-
-    public interface IPickedTest
-    {
-        void TestHandlePickup();
     }
 }

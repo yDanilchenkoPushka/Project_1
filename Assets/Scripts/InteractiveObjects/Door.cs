@@ -8,8 +8,9 @@ namespace InteractiveObjects
 {
     public class Door : MonoBehaviour, IInteractable
     {
-        public event Action<bool> OnStateChanged;
+        public event Action OnOpened;
         
+        public bool CanInteract => !_isOpened;
         public Vector3 Position => transform.position;
         
         [SerializeField]
@@ -22,6 +23,7 @@ namespace InteractiveObjects
         private Outline _outline;
 
         private Tween _animation;
+        private bool _isOpened;
 
         public void Awake()
         {
@@ -33,36 +35,30 @@ namespace InteractiveObjects
             SetOutline(false);
         }
 
-        public void Interact(object sender)
+        public void EnterInteractive()
         {
-            Debug.Log("Interact with door");
-            
-            Open();
+            if(CanInteract) 
+                SetOutline(true);
         }
-        
-        // private void EnterInteractive(IInteractiveHandler interactiveHandler)
-        // {
-        //     interactiveHandler.EnterInteractive(this);
-        //     
-        //     SetOutline(true);
-        // }
-        //
-        // private void ExitInteractive(IInteractiveHandler interactiveHandler)
-        // {
-        //     interactiveHandler.ExitInteractive(this);
-        //     
-        //     SetOutline(false);
-        // }
-        
+
+        public void ExitInteractive() => 
+            SetOutline(false);
+
+        public void Interact(object sender) => 
+            Open();
+
         private void SetOutline(bool isOutline) => 
             _outline.enabled = isOutline;
 
         [ContextMenu("Open")]
         private void Open()
         {
-            OnStateChanged?.Invoke(true);
+            OnOpened?.Invoke();
             
             _animation.PlayForward();
+            _isOpened = true;
+            
+            SetOutline(false);
 
             StartCoroutine(Close());
         }
@@ -71,9 +67,11 @@ namespace InteractiveObjects
         {
             yield return new WaitForSeconds(_closingTime);
             
-            OnStateChanged?.Invoke(false);
-            
             _animation.PlayBackwards();
+
+            _isOpened = false;
+            
+            SetOutline(false);
         }
     }
 }

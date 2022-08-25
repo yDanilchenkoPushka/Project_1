@@ -27,7 +27,7 @@ namespace UI.Bars.Tips
         private TipLabel _labelPrefab;
 
         private ISimpleInput _simpleInput;
-        private IInterectionEvents _interectionEvents;
+        private IInteractionEvents _interactionEvents;
 
         private Dictionary<IInteractable, TipLabel> _labels = new Dictionary<IInteractable, TipLabel>();
         private TipsFactory _tipsFactory;
@@ -41,14 +41,14 @@ namespace UI.Bars.Tips
             _tipsFactory = new TipsFactory(_labelPrefab, GetComponent<RectTransform>());
         }
 
-        public void Initialize(IOut<IInterectionEvents> interectionEvents)
+        public void Initialize(IOut<IInteractionEvents> interactionEvents)
         {
-            _interectionEvents = interectionEvents.Value;
+            _interactionEvents = interactionEvents.Value;
             
             _simpleInput.OnDeviceUpdated += UpdateLabels;
             
-            _interectionEvents.OnEntered += OnInteractiveEntered;
-            _interectionEvents.OnExited += OnInteractiveExited;
+            _interactionEvents.OnEntered += OnInteractiveEntered;
+            _interactionEvents.OnExited += OnInteractiveExited;
         }
 
         public void Tick()
@@ -60,11 +60,11 @@ namespace UI.Bars.Tips
         {
             _simpleInput.OnDeviceUpdated -= UpdateLabels;
             
-            if (_interectionEvents == null)
+            if (_interactionEvents == null)
                 return;
 
-            _interectionEvents.OnEntered -= OnInteractiveEntered;
-            _interectionEvents.OnExited -= OnInteractiveExited;
+            _interactionEvents.OnEntered -= OnInteractiveEntered;
+            _interactionEvents.OnExited -= OnInteractiveExited;
         }
 
         private void UpdateLabels(DeviceType deviceType) => 
@@ -102,11 +102,18 @@ namespace UI.Bars.Tips
 
         private void UpdateLabel(IInteractable interactable, TipLabel label)
         {
-            Vector3 offsetPosition = interactable.Position + Vector3.up * Offset;
+            if (interactable.CanInteract)
+            {
+                Vector3 offsetPosition = interactable.Position + Vector3.up * Offset;
             
-            UIUtils.PlaceUIElement(_camera, _canvasRectTransform, label.RectTransform, offsetPosition);
+                UIUtils.PlaceUIElement(_camera, _canvasRectTransform, label.RectTransform, offsetPosition);
             
-            label.Show(GetMessage(_simpleInput.LastDevice));
+                label.Show(GetMessage(_simpleInput.LastDevice));
+
+                return;
+            }
+            
+            label.Hide();
         }
 
         private string GetMessage(DeviceType deviceType)
