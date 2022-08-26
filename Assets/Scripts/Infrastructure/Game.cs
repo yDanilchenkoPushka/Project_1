@@ -128,6 +128,8 @@ namespace Infrastructure
             _scoreBar.DeInitialize();
             
             _playerController.OnDamaged -= KillPlayerController;
+
+            _followingNpc.DeInitialize();
             
             LoadMainMenu();
         }

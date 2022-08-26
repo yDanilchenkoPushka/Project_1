@@ -50,7 +50,13 @@ namespace Characters.Enemy.Following
 
             _stateMachine.ChangeState<IdleState>();
         }
-        
+
+        public void DeInitialize()
+        {
+            _target = null;
+            OnTargetUpdated?.Invoke();
+        }
+
         public void EnterInteractive()
         {
         }

@@ -1,4 +1,6 @@
-﻿using Data;
+﻿using System;
+using System.Threading;
+using Data;
 using Infrastructure.Processors.Tick;
 using Services;
 using Services.Input;
@@ -6,6 +8,7 @@ using Services.Scene;
 using TMPro;
 using UI.Bars;
 using UI.Buttons;
+using Unity.GameCore;
 using UnityEngine;
 
 namespace Infrastructure
@@ -23,10 +26,18 @@ namespace Infrastructure
 
         [SerializeField]
         private DeviceBar _deviceBar;
-        
+
+        [SerializeField]
+        private UserBar _userBar;
+
         private ExitHandler _exitHandler;
 
         private AllServices _services = new AllServices();
+
+        private XboxUser _xbUser;
+        
+        private Thread m_DispatchJob;
+        private bool m_StopExecution;
 
         private void Awake()
         {
@@ -37,7 +48,15 @@ namespace Infrastructure
             _buttonBar.Construct(_services.Single<ISimpleInput>());
             _deviceBar.Construct(_services.Single<ISimpleInput>());
             
+            _userBar.Initialize();
+            
             Initialize();
+        }
+
+        private void Update()
+        {
+            if (_xbUser != null)
+                _xbUser.Tick();
         }
 
         private void Initialize()
@@ -49,12 +68,15 @@ namespace Infrastructure
             
             if (_buttonBar.TryGetButton<ExitButton>(out interactiveButton))
                 interactiveButton.OnClicked += Exit;
+
+            XblInitialize();
         }
 
         private void DeInitialize()
         {
             _buttonBar.DeInitialize();
             _deviceBar.DeInitialize();
+            _userBar.DeInitialize();
             
             InteractiveButton interactiveButton;
             
@@ -106,6 +128,43 @@ namespace Infrastructure
             _log.text = "UnityInput";
             return new UnityInput(_logLabel);
 #endif
+        }
+
+        private void XblInitialize()
+        {
+            Int32 hr = SDK.XGameRuntimeInitialize();
+            if (hr == 0)
+            {
+                // start the async task dispatch thread
+                m_StopExecution = false;
+                m_DispatchJob = new Thread(DispatchGXDKTaskQueue) { Name = "GXDK Task Queue Dispatch" };
+                m_DispatchJob.Start();
+                
+                hr = SDK.XBL.XblInitialize(UnityEngine.GameCore.GameCoreSettings.SCID);
+                if (hr == 0)
+                {
+                    CreateUser();
+                }
+            }
+        }
+
+        private void CreateUser()
+        {
+            _xbUser = new XboxUser();
+            
+            _userBar.Construct(_xbUser);
+            
+            _xbUser.AddDefaultUser();
+        }
+        
+        void DispatchGXDKTaskQueue()
+        {
+            // this will execute all GXDK async work
+            while (m_StopExecution == false)
+            {
+                SDK.XTaskQueueDispatch(0);
+                Thread.Sleep(32);
+            }
         }
     }
 }
