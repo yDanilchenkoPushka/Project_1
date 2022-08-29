@@ -880,7 +880,6 @@ GameObject:
   m_Component:
   - component: {fileID: 343329683}
   - component: {fileID: 343329682}
-  - component: {fileID: 343329680}
   - component: {fileID: 343329681}
   m_Layer: 7
   m_Name: InteractiveTrigger
@@ -889,18 +888,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &343329680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 343329679}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eaa889a9cd7c4bffa00d6e006c57dcf7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &343329681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1264,7 +1251,6 @@ GameObject:
   m_Component:
   - component: {fileID: 714060506}
   - component: {fileID: 714060509}
-  - component: {fileID: 714060508}
   - component: {fileID: 714060507}
   m_Layer: 7
   m_Name: InteractiveTrigger
@@ -1301,18 +1287,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _color: {r: 0, g: 1, b: 0, a: 0.2509804}
   _sphereCollider: {fileID: 714060509}
---- !u!114 &714060508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 714060505}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eaa889a9cd7c4bffa00d6e006c57dcf7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &714060509
 SphereCollider:
   m_ObjectHideFlags: 0

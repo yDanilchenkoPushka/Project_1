@@ -85,6 +85,8 @@ namespace Infrastructure
             
             if (_buttonBar.TryGetButton<ExitButton>(out interactiveButton))
                 interactiveButton.OnClicked -= Exit;
+            
+            m_StopExecution = true;
         }
 
         private void OnDestroy() => 

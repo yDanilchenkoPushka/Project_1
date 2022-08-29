@@ -27,7 +27,7 @@ public class UserBar : MonoBehaviour
         if(_user != null)
             _user.OnUserUpdated -= UpdateBar;
         
-        _canvas.enabled = false;
+        //_canvas.enabled = false;
         _user = null;
     }
 
@@ -40,11 +40,8 @@ public class UserBar : MonoBehaviour
 
     private void UpdateBar(XboxUser.UserData data)
     {
-        Debug.Log("18");
-
-        
         _canvas.enabled = true;
-
+        
         UpdateLabel(data.userGamertag);
         UpdateAvatar(data.imageBuffer);
     }
@@ -56,7 +53,7 @@ public class UserBar : MonoBehaviour
     {
         if (imageBuffer == null)
             return;
-        
+
         Texture2D myTexture = new Texture2D(1, 1, TextureFormat.ARGB32, false);
         myTexture.filterMode = FilterMode.Point;
         myTexture.LoadImage(imageBuffer);
