@@ -44,15 +44,19 @@ namespace Services.Input
         {
             _controls = new Controls();
 
-            var devices = InputSystem.devices;
-            string log = String.Empty;
-
-            foreach (var device in devices)
+            if (logLabel != null)
             {
-                log += device.name + "\n";
-            }
-            logLabel.text = log;
+                var devices = InputSystem.devices;
+                string log = String.Empty;
+
+                foreach (var device in devices)
+                {
+                    log += device.name + "\n";
+                }
             
+                logLabel.text = log;
+            }
+
             _controls.Enable();
             
             _controls.MainMenu.Click.performed += OnClickButtonDown;

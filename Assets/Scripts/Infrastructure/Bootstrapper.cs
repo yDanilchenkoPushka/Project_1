@@ -8,7 +8,8 @@ using Services.Scene;
 using TMPro;
 using UI.Bars;
 using UI.Buttons;
-using Unity.GameCore;
+using Unity.Netcode;
+//using Unity.GameCore;
 using UnityEngine;
 
 namespace Infrastructure
@@ -34,7 +35,7 @@ namespace Infrastructure
 
         private AllServices _services = new AllServices();
 
-        private XboxUser _xbUser;
+        //private XboxUser _xbUser;
         
         private Thread m_DispatchJob;
         private bool m_StopExecution;
@@ -48,15 +49,15 @@ namespace Infrastructure
             _buttonBar.Construct(_services.Single<ISimpleInput>());
             _deviceBar.Construct(_services.Single<ISimpleInput>());
             
-            _userBar.Initialize();
+            //_userBar.Initialize();
             
             Initialize();
         }
 
         private void Update()
         {
-            if (_xbUser != null)
-                _xbUser.Tick();
+            // if (_xbUser != null)
+            //     _xbUser.Tick();
         }
 
         private void Initialize()
@@ -76,7 +77,7 @@ namespace Infrastructure
         {
             _buttonBar.DeInitialize();
             _deviceBar.DeInitialize();
-            _userBar.DeInitialize();
+            //_userBar.DeInitialize();
             
             InteractiveButton interactiveButton;
             
@@ -150,23 +151,23 @@ namespace Infrastructure
         //     }
         // }
 
-        private void CreateUser()
-        {
-            _xbUser = new XboxUser();
-            
-            _userBar.Construct(_xbUser);
-            
-            _xbUser.AddDefaultUser();
-        }
+        // private void CreateUser()
+        // {
+        //     _xbUser = new XboxUser();
+        //     
+        //     _userBar.Construct(_xbUser);
+        //     
+        //     _xbUser.AddDefaultUser();
+        // }
         
-        void DispatchGXDKTaskQueue()
-        {
-            // this will execute all GXDK async work
-            while (m_StopExecution == false)
-            {
-                SDK.XTaskQueueDispatch(0);
-                Thread.Sleep(32);
-            }
-        }
+        // void DispatchGXDKTaskQueue()
+        // {
+        //     // this will execute all GXDK async work
+        //     while (m_StopExecution == false)
+        //     {
+        //         SDK.XTaskQueueDispatch(0);
+        //         Thread.Sleep(32);
+        //     }
+        // }
     }
 }
