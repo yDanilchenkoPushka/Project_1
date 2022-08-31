@@ -69,7 +69,7 @@ namespace Infrastructure
             if (_buttonBar.TryGetButton<ExitButton>(out interactiveButton))
                 interactiveButton.OnClicked += Exit;
 
-            XblInitialize();
+            //XblInitialize();
         }
 
         private void DeInitialize()
@@ -132,23 +132,23 @@ namespace Infrastructure
 #endif
         }
 
-        private void XblInitialize()
-        {
-            Int32 hr = SDK.XGameRuntimeInitialize();
-            if (hr == 0)
-            {
-                // start the async task dispatch thread
-                m_StopExecution = false;
-                m_DispatchJob = new Thread(DispatchGXDKTaskQueue) { Name = "GXDK Task Queue Dispatch" };
-                m_DispatchJob.Start();
-                
-                hr = SDK.XBL.XblInitialize(UnityEngine.GameCore.GameCoreSettings.SCID);
-                if (hr == 0)
-                {
-                    CreateUser();
-                }
-            }
-        }
+        // private void XblInitialize()
+        // {
+        //     Int32 hr = SDK.XGameRuntimeInitialize();
+        //     if (hr == 0)
+        //     {
+        //         // start the async task dispatch thread
+        //         m_StopExecution = false;
+        //         m_DispatchJob = new Thread(DispatchGXDKTaskQueue) { Name = "GXDK Task Queue Dispatch" };
+        //         m_DispatchJob.Start();
+        //         
+        //         hr = SDK.XBL.XblInitialize(GameCore.GameCoreSettings.SCID);
+        //         if (hr == 0)
+        //         {
+        //             CreateUser();
+        //         }
+        //     }
+        // }
 
         private void CreateUser()
         {
